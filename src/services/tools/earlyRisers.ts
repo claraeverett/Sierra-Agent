@@ -1,8 +1,8 @@
 import { ToolResponse } from './tools';
 import { Tool } from '../../types/types';
 import { State } from '../../state/state';
-import { EARLY_RISERS } from '../../knowledge/knowledgeBase';
-import { EARLY_RISERS_RESPONSE } from '../../prompts/responses';
+import { EARLY_RISERS } from '../../config/constants';
+import { EARLY_RISERS_RESPONSE } from '../../prompts/earlyrisers';
 import { getTime, getPromoCode, timeIsToday } from '../../utils/utils';
 
 interface EarlyRisersParams {
@@ -79,6 +79,8 @@ export const earlyRisersTool: Tool = {
       timeZoneName: 'short'
     });
 
+    state.addUnresolvedIntents('EarlyRisers');
+    
     return {
       success: false,
       details: {

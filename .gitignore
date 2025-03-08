@@ -1,22 +1,43 @@
-# Dependencies
+# Dependency directories
 node_modules/
-
-# Build output
-dist/
+jspm_packages/
 
 # Environment variables
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build outputs
+dist/
+build/
+out/
 
 # Logs
+logs
 *.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# IDE specific files
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# IDE / editors
 .idea/
 .vscode/
 *.swp
 *.swo
-
-# OS specific files
 .DS_Store
-Thumbs.db 
+
+# Misc
+.npm
+.eslintcache
+.yarn-integrity 

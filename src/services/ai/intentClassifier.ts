@@ -1,10 +1,11 @@
 import { INTENT_CLASSIFICATION_PROMPT } from '../../prompts/systemPrompts';
 import { intentClassifier } from './chatComplete';
 import { IntentClassification } from '../../types/types';
+import { State } from '../../state/state';
 
-export async function classifyIntent(message: string): Promise<IntentClassification> {
+export async function classifyIntent(message: string, state: State): Promise<IntentClassification> {
   
-  const completion = await intentClassifier(INTENT_CLASSIFICATION_PROMPT, message);
+  const completion = await intentClassifier(INTENT_CLASSIFICATION_PROMPT, message, state);
 
   try {
     const result = JSON.parse(completion.choices[0].message.content || '{}');

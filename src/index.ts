@@ -27,7 +27,7 @@ async function chat() {
     if (userInput.toLowerCase() === 'exit') break;
 
     try {
-      const classification = await classifyIntent(userInput);
+      const classification = await classifyIntent(userInput, state);
       const response = await agent.handleRequest(classification, userInput);
       console.log('Sierra Outfitters Assistant:', response);
     } catch (error) {

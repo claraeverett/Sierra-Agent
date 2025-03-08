@@ -26,20 +26,17 @@ export async function generateResponse(
         .join("\n");
       formattedPrompt = formattedPrompt.replace("{details}", formattedDetails);
     }
+    
 
     // Get recent conversation history for context
-    const conversationHistory = state.conversation
-      .slice(-5) // Keep last 5 messages for context
-      .map(entry => ({
-        role: entry.role,
-        content: entry.content
-      }));
-
+    const conversationHistory = state.getConversationHistory();
     // Add the current prompt to conversation
     conversationHistory.push({ 
-      role: "assistant", 
+      role: "system", 
       content: formattedPrompt 
     });
+
+    console.log("GenerateResponse conversationHistory : ", conversationHistory);
 
     // Generate AI response
     const response = await modelResponse(
@@ -47,8 +44,10 @@ export async function generateResponse(
       GENERATE_RESPONSE_PROMPT
     );
 
+
     // Process and store response
     const aiResponse = response.choices[0].message.content || null;
+
     if (aiResponse) {
       // Add AI response to conversation history
       state.addConversationEntry( 

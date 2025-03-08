@@ -1,6 +1,6 @@
 import { IntentClassification, Tool } from '../types/types';
 import { tools, ToolResponse } from './tools/tools';
-import { GENERAL_RESPONSE } from '../prompts/responses';
+import { GENERAL_RESPONSE } from '../prompts/systemPrompts';
 import { State } from '../state/state';
 import { generateResponse } from './ai/generateResponse';
 
@@ -24,16 +24,12 @@ export class Agent {
       return GENERAL_RESPONSE;
     }
 
+
     const AIResponse = await generateResponse(
       this.state,
       toolResponse.promptTemplate,
       toolResponse.details || {}
     );
-    /*
-    if (AIResponse) {
-      this.state.addConversationEntry('system', AIResponse);
-    }
-    */
     
     return AIResponse || GENERAL_RESPONSE;
   }
@@ -59,7 +55,7 @@ export class Agent {
 
   private async handleGeneralIntent(): Promise<ToolResponse> {
     return {
-      success: false,
+      success: true,
       promptTemplate: GENERAL_RESPONSE,
       details: {}
     };

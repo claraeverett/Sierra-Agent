@@ -1,6 +1,7 @@
 import { Order, ConversationEntry } from '../types/types';
 import { PromoCode } from '../types/earlyRisers';
-
+import { CustomerPreferences, PreferenceKey } from './customerPreferences';
+import { Intent } from '../types/types';
 
 interface CustomerInfo {
   name: string;
@@ -16,13 +17,45 @@ export class State {
   public promoCode: PromoCode | null = null;
   public extractedParams: Record<string, any> = {};
   private customerInfo: CustomerInfo | null = null;
+  private customerPreferences: CustomerPreferences;
+  private followUpCount: Map<Intent, number> = new Map();
 
-  public unresolvedIntents: Set<string> = new Set();
+  public unresolvedIntents: Set<Intent> = new Set();
   public currentIntent?: string;
 
   constructor(userId: string, sessionId: string) {
     this.userId = userId;
     this.sessionId = sessionId;
+    this.customerPreferences = new CustomerPreferences();
+    this.followUpCount = new Map();
+  }
+
+  getFollowUpCount(intent: Intent): number {
+    return this.followUpCount.get(intent) || 0;
+  }
+
+  incrementFollowUpCount(intent: Intent) {
+    this.followUpCount.set(intent, (this.followUpCount.get(intent) || 0) + 1);
+  }
+
+  resetFollowUpCount(intent: Intent) {
+    this.followUpCount.set(intent, 0);
+  }
+
+  clearAllFollowUpCounts() {
+    this.followUpCount.clear();
+  }
+
+  getPreference(key: PreferenceKey): string {
+    return this.customerPreferences.getPreference(key);
+  }
+
+  setPreference(key: PreferenceKey, value: string) {
+    this.customerPreferences.setPreference(key, value);
+  }
+
+  clearPreference(key: PreferenceKey) {
+    this.customerPreferences.clearPreference(key);
   }
 
   clearOrderInfo() {
@@ -37,7 +70,11 @@ export class State {
     return Array.from(this.pastOrderInfo);
   }
 
-  resolveIntent(intent: string) {
+  addUnresolvedIntents(intent: Intent) {
+    this.unresolvedIntents.add(intent);
+  }
+
+  resolveIntent(intent: Intent) {
     this.unresolvedIntents.delete(intent);
   }
 

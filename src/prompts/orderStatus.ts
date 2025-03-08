@@ -22,6 +22,6 @@ export const ORDER_STATUS_RESPONSE = {
       trackingNumber: string 
     }) => `The customer's order (ID: ${details.orderNumber}) is ${details.status}. The order contains: ${details.items}.
       ${details.trackingNumber ? `Tracking link: https://tools.usps.com/go/TrackConfirmAction?tLabels=${details.trackingNumber}` : ''}
-      Provide this information in a friendly, conversational way and ask if they need anything else.`,
-    };
+      Provide this information in a friendly, conversational way and ask if they need anything else.`
+  };
   

@@ -1,7 +1,7 @@
 import { Tool } from '../../types/types';
 import { ToolResponse } from './tools';
 import { State } from '../../state/state';
-import { GENERAL_RESPONSE } from '../../prompts/responses';
+import { GENERAL_RESPONSE } from '../../prompts/systemPrompts';
 
 export const generalTool: Tool = {
   name: 'general',

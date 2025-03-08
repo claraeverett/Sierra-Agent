@@ -1,7 +1,7 @@
 import { ToolResponse } from './tools';
 import { Tool } from '../../types/types';
 import { State } from '../../state/state';
-import { ORDER_STATUS_RESPONSE } from '../../prompts/responses';
+import { ORDER_STATUS_RESPONSE } from '../../prompts/orderStatus';
 import { getOrderStatus, getProductDetails } from '../../data/store';
 
 // Parameter types for order status requests
@@ -15,6 +15,7 @@ export const orderStatusTool: Tool = {
   description: 'Check status of orders and order history',
   execute: async (params: OrderStatusParams, state: State): Promise<ToolResponse> => {    
     // Extract parameters from request
+    state.addUnresolvedIntents('OrderStatus');
     let orderId = params.orderId;
     let email = params.email;
 
@@ -67,7 +68,7 @@ export const orderStatusTool: Tool = {
     if (!order || validEmail != email) {
       return {
         success: false,
-        promptTemplate: ORDER_STATUS_RESPONSE.INVALID_ORDER({orderId: orderId || '', email: email || ''})
+        promptTemplate:  ORDER_STATUS_RESPONSE.INVALID_ORDER({orderId: orderId || '', email: email || ''})
       };
     }
 
