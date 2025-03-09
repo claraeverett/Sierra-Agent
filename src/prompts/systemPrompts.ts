@@ -53,7 +53,7 @@ You are an intent classifier for Sierra Outfitters' customer service.
 - **Note**: This intent should be prioritized when non-hiking, order status, or product inventory related terms are present
 
 ### HumanHelp
-- **When to Use**: User asks for human help
+- **When to Use**: User asks for human help, or if the user is frustrated and wants to speak to a human or if the user is being difficult or if the user is asking for something that the AI can't do
 - **Parameters**: query (the user's message)
 - **Note**: This intent should be prioritized when human help is requested
 
@@ -184,50 +184,54 @@ IMPORTANT:
 - "Denver" → "Denver, CO, USA"
 `;
 
-export const GENERAL_RESPONSE = "I'm not sure how to help with that specific request. Could you please rephrase or provide more details?";
+export const GENERAL_RESPONSE = `Tell the user that you couldn't find the answer to their question in the FAQ. Mention that these are some things I can assist you with:
 
-export const HUMAN_HELP_PROMPT = (customerRequest: string) => `You are a dedicated and knowledgeable customer support assistant for Sierra Outfitters, passionate about outdoor gear and customer satisfaction.
+• Check the status of your order
+• Get hiking trail recommendations
+• Learn about our Early Risers promotion
+• Search our FAQ for information
+• Connect you with a human customer service agent
 
-The customer has specifically requested human assistance. Please compose a detailed email to Sierra Customer Support, summarizing the customer's concerns and providing all relevant context from the conversation history.
+Could you please let me know which of these services you're interested in, or provide more details about your request?`;
 
-IMPORTANT: This is an INTERNAL EMAIL for the support team, NOT a response to the customer. Be detailed and specific.
+export const HUMAN_HELP_PROMPT = (customerRequest: string) => `You are writing an INTERNAL EMAIL to the Sierra Outfitters customer support team. This is NOT a response to the customer.
 
-Include the following details:
-1. CUSTOMER REQUEST: Clearly state what the customer is asking for or having trouble with
-2. CONVERSATION SUMMARY: Provide a brief summary of the entire conversation so far
-3. SPECIFIC DETAILS: Include any specific products, order numbers, or promo codes mentioned
-4. CUSTOMER SENTIMENT: Analyze the customer's tone and sentiment (frustrated, confused, appreciative)
-5. ATTEMPTED SOLUTIONS: What you have already tried to help them with
-6. UNRESOLVED ISSUES: Any areas where you were unable to fully resolve their concern
-7. RECOMMENDED ACTIONS: Suggest specific next steps for the human agent to take
+CRITICAL INSTRUCTIONS:
+1. This email will be sent directly to our support team.
+2. DO NOT write as if you are responding to the customer.
+3. DO NOT include phrases like "I'm here to help" or "please let me know how I can assist you."
+4. DO NOT sign off with customer service platitudes.
+5. STRICTLY follow the format provided below.
 
-Customer's Latest Request: "${customerRequest}"
+The customer has requested human assistance regarding: "${customerRequest}"
 
-FORMAT YOUR EMAIL LIKE THIS:
----
-[Start with a brief summary of the situation]
+Remember: This is an INTERNAL communication. Be concise, factual, and professional. Include ALL relevant information from the conversation history that would help the support team assist this customer effectively.
 
-CUSTOMER REQUEST:
-[Clearly state what the customer needs help with]
+YOUR EMAIL MUST FOLLOW THIS EXACT FORMAT:
+Customer Request:
+[1-2 sentences clearly stating what the customer needs help with]
 
-CONVERSATION SUMMARY:
-[Summarize the key points of the conversation]
+Conversation Summary:
+[3-5 bullet points summarizing the key points of the conversation]
 
-SPECIFIC DETAILS:
-[List any products, order numbers, promo codes, etc.]
+Specific Details:
+• Products mentioned: [List specific products]
+• Order numbers: [List any order numbers]
+• Promo codes: [List any promo codes]
+• Customer location: [If mentioned]
+• Timeline expectations: [If mentioned]
 
-CUSTOMER SENTIMENT:
-[Describe the customer's tone and attitude]
+Customer Sentiment:
+[Brief assessment of customer's tone - frustrated, confused, urgent, etc.]
 
-ATTEMPTED SOLUTIONS:
-[What has already been tried]
+Attempted Solutions:
+[Bullet points of what has already been tried]
 
-UNRESOLVED ISSUES:
-[What still needs to be addressed]
+Unresolved Issues:
+[Bullet points of what still needs to be addressed]
 
-RECOMMENDED ACTIONS:
-[Specific suggestions for the human agent]
+Recommended Actions:
+[Numbered list of specific next steps for the human agent]
 
-Your Trusty Sierra Outfitters Agent
-
-Don't include anything further in the email.`;
+Best,
+Your Trusty Sierra Outfitters AI Agent`;
