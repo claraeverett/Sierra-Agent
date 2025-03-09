@@ -1,5 +1,5 @@
 import { INTENT_CLASSIFICATION_PROMPT } from '../../prompts/systemPrompts';
-import { intentClassifier } from './chatComplete';
+import { intentClassifier } from './aiService';
 import { IntentClassification } from '../../types/types';
 import { State } from '../../state/state';
 

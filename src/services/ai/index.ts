@@ -1,4 +1,4 @@
-import { modelResponse } from './chatComplete';
+import { modelResponse } from './aiService';
 import { classifyIntent } from './intentClassifier';
 import { generateResponse } from './generateResponse';
 

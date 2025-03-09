@@ -5,8 +5,8 @@ import { Agent } from './services/agent';
 import { State } from './state/state';
 
 const state = new State("user_123", "session_456");
-  
 dotenv.config();
+
 
 // Setup CLI interface
 const rl = readline.createInterface({
@@ -17,6 +17,7 @@ const rl = readline.createInterface({
 const agent = new Agent(state);
 
 async function chat() {
+
   console.log('Sierra Outfitters Assistant: How can I help you today?');
   
   while (true) {

@@ -2,7 +2,7 @@ import { ToolResponse } from './tools';
 import { Tool } from '../../types/types';
 import { State } from '../../state/state';
 import { EARLY_RISERS } from '../../config/constants';
-import { EARLY_RISERS_RESPONSE } from '../../prompts/earlyrisers';
+import { EARLY_RISERS_RESPONSE } from '../../prompts/earlyRisers';
 import { getTime, getPromoCode, timeIsToday } from '../../utils/utils';
 
 interface EarlyRisersParams {

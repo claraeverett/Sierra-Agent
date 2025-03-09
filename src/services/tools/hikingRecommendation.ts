@@ -4,8 +4,10 @@ import { Tool } from "../../types/types";
 import { HIKING_RECOMMENDATION_PROMPT } from "../../prompts/systemPrompts";
 import { COLLECT_HIKING_PREFERENCES_RESPONSE } from "../../prompts/hikingRecommendation";
 import { PreferenceKey } from "../../state/customerPreferences";
-import { modelResponse } from "../ai/chatComplete";
+import { modelResponse } from "../ai/aiService";
 import { HIKING_RECOMMENDATION_PREFERENCES } from "../../config/constants";
+import { apiService } from "../api/apiService";
+
 interface HikingParams {
   location: string;
   difficulty?: "easy" | "moderate" | "hard";
@@ -167,6 +169,7 @@ export const getHikingRecommendations = async (params: HikingParams, state: Stat
     );
 
     const hikes = parseHikingResponse(response.choices[0].message.content || '');
+    
 
     // Check if location is provided
     
@@ -180,7 +183,13 @@ export const getHikingRecommendations = async (params: HikingParams, state: Stat
         promptTemplate: COLLECT_HIKING_PREFERENCES_RESPONSE.NO_HIKES_FOUND(location)
       };
     }
-
+    console.log("hikes.region", hikes.region);
+    const coordinates = await apiService.getCoordinates(hikes.region.zipcode, hikes.region.country_code);
+    if (coordinates) {
+        console.log("We have coordinates");
+      const weather = await apiService.getWeather(coordinates.lat, coordinates.lon);
+      console.log("weather", weather);
+    }
     // Create a formatted description of each trail
     const trailsDescription = hikes.trails.map((trail, index) => {
       return `**${index + 1}. ${trail.name}**

@@ -15,7 +15,7 @@ export class Agent {
 
   async handleRequest(classification: IntentClassification, userMessage: string) {
     this.state.addConversationEntry('user', userMessage);
-
+    console.log("classification", classification);
     const toolResponse = classification.intents.length > 1 
       ? await this.handleMultiIntent(classification)
       : await this.handleSingleIntent(classification.intents[0], classification.params[classification.intents[0]] || {});

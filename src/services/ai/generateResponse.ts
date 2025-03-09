@@ -1,6 +1,6 @@
 import { State } from '../../state/state';
 import { GENERATE_RESPONSE_PROMPT } from '../../prompts/systemPrompts';
-import { modelResponse } from './chatComplete';
+import { modelResponse } from './aiService';
 
 /**
  * Generates an AI response based on the conversation context and prompt template

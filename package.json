@@ -12,9 +12,12 @@
     "format": "prettier --write \"src/**/*.ts\""
   },
   "dependencies": {
+    "@pinecone-database/pinecone": "^5.1.1",
+    "@types/fs-extra": "^11.0.4",
     "axios": "^1.8.2",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "fs-extra": "^11.3.0",
     "openai": "^4.0.0"
   },
   "devDependencies": {
