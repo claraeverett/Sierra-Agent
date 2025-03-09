@@ -1,15 +1,11 @@
 import { Pinecone } from "@pinecone-database/pinecone";
 import OpenAI from "openai";
 import * as dotenv from "dotenv";
-import { Tool } from "../../types/types";
-import { State } from "../../state/state";
-import { ToolResponse } from "./tools";
+import { Tool, FAQParams } from '@/types/types';
+import { State } from '@/core/state/state';
+import { ToolResponse } from '@/services/tools/toolExport';
 
 dotenv.config();
-
-interface FAQParams {
-  query: string;
-}
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY! });
@@ -21,6 +17,7 @@ export const searchFaqTool: Tool = {
   description: 'Search the FAQ',
   execute: async (params: FAQParams, state: State): Promise<ToolResponse> => {
     try {
+      state.addUnresolvedIntents("SearchFAQ");
       const index = pinecone.index(INDEX_NAME);
       const query = params.query;
       console.log(state);
@@ -50,6 +47,7 @@ export const searchFaqTool: Tool = {
       console.log("matchedTexts", matchedTexts);
       console.log("");
       // Generate final response
+      state.resolveIntent("SearchFAQ");
       return {
         success: true,
         details: {

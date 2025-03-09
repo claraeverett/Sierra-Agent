@@ -1,4 +1,4 @@
-import { Order, Product } from "../../types/types";
+import { Order, Product } from '@/types/types';
 
 // Orders Map (for fast lookup by order number)
 export const ordersMap: Record<string, Order> = {

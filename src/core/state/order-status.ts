@@ -1,5 +1,9 @@
-import { Order } from '../types/types';
+import { Order } from '@/types/types';
 
+/**
+ * Class for managing order status
+ * Stores and retrieves order information
+ */
 export class OrderStore {
   private currentOrder: Order | null = null;
   private pastOrders: Set<Order> = new Set();

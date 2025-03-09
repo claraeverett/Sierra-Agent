@@ -1,6 +1,6 @@
-import { State } from '../../state/state';
-import { GENERATE_RESPONSE_PROMPT } from '../../prompts/systemPrompts';
-import { modelResponse } from './aiService';
+import { State } from '@/core/state/state';
+import { GENERATE_RESPONSE_PROMPT } from '@/prompts/system-prompts';
+import { modelResponse } from '@/services/ai/openai-service';
 
 /**
  * Generates an AI response based on the conversation context and prompt template

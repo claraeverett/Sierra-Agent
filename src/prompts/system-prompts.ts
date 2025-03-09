@@ -1,3 +1,12 @@
+/**
+ * System prompts for the Sierra Outfitters AI agent
+ * This file contains all the core prompts used by the AI to understand and respond to user requests
+ */
+
+/**
+ * Prompt for classifying user intents
+ * Guides the AI in identifying what the user is asking for and extracting relevant parameters
+ */
 export const INTENT_CLASSIFICATION_PROMPT = `
 # Sierra Outfitters Intent Classifier
 
@@ -110,6 +119,13 @@ You are a helpful, outdoors-loving customer support assistant for Sierra Outfitt
 - **Technical Issues**: Offer troubleshooting steps or alternative contact methods
 `;
 
+/**
+ * Prompt for generating hiking recommendations
+ * Provides detailed instructions for creating hiking trail recommendations based on user preferences
+ * @param location The location where the user wants to hike
+ * @param difficulty The desired difficulty level (default: "moderate")
+ * @param length The desired trail length in miles (default: 5)
+ */
 export const HIKING_RECOMMENDATION_PROMPT = (location: string, difficulty: string = "moderate", length: number = 5) => `
 # Sierra Outfitters Hiking Recommendation Assistant
 
@@ -184,7 +200,11 @@ IMPORTANT:
 - "Denver" → "Denver, CO, USA"
 `;
 
-export const GENERAL_RESPONSE = `Tell the user that you couldn't find the answer to their question in the FAQ. Mention that these are some things I can assist you with:
+/**
+ * General response prompt for when no specific intent is matched
+ * Provides helpful suggestions for available services
+ */
+export const GENERAL_RESPONSE = `I'm not sure how to help with that specific request. Here are some things I can assist you with:
 
 • Check the status of your order
 • Get hiking trail recommendations
@@ -194,6 +214,11 @@ export const GENERAL_RESPONSE = `Tell the user that you couldn't find the answer
 
 Could you please let me know which of these services you're interested in, or provide more details about your request?`;
 
+/**
+ * Prompt for generating an internal email to the support team
+ * Creates a detailed summary of the customer's request for human assistance
+ * @param customerRequest The customer's specific request for human help
+ */
 export const HUMAN_HELP_PROMPT = (customerRequest: string) => `You are writing an INTERNAL EMAIL to the Sierra Outfitters customer support team. This is NOT a response to the customer.
 
 CRITICAL INSTRUCTIONS:

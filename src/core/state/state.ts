@@ -1,10 +1,9 @@
 import { Order, ConversationEntry, PromoCode, PreferenceKey } from '@/types/types';
-import { CustomerPreferences } from '@/state/customerPreferences';
+import { CustomerPreferences } from '@/core/state/user-preferences';
 import { Intent } from '@/types/types';
 
 /**
  * Interface representing customer information
- * Contains basic customer identification details
  */
 interface CustomerInfo {
   name: string;
@@ -14,54 +13,26 @@ interface CustomerInfo {
 /**
  * Main state management class for the Sierra Outfitters agent
  * Handles conversation history, customer preferences, order information, and more
- * 
- * This class serves as the central repository for all stateful information
- * during a customer interaction session. It tracks conversation history,
- * customer preferences, order details, and intent status.
  */
 export class State {
   // Public properties
-  /** Set of past orders associated with the customer */
   public pastOrderInfo: Set<Order> = new Set();
-  
-  /** Current order being discussed or processed */
   public orderInfo: Order | null = null;
-  
-  /** Complete conversation history */
   public conversation: ConversationEntry[] = [];
-  
-  /** Unique identifier for the customer */
   public userId: string;
-  
-  /** Identifier for the current session */
   public sessionId: string;
-  
-  /** Active promotional code if any */
   public promoCode: PromoCode | null = null;
-  
-  /** Parameters extracted from user messages */
   public extractedParams: Record<string, any> = {};
-  
-  /** Set of intents that have been mentioned but not fully resolved */
   public unresolvedIntents: Set<Intent> = new Set();
-  
-  /** The current active intent being processed */
   public currentIntent?: string;
   
   // Private properties
-  /** Customer personal information */
   private customerInfo: CustomerInfo | null = null;
-  
-  /** Customer preferences for various features */
   private customerPreferences: CustomerPreferences;
-  
-  /** Tracks how many times we've followed up on specific intents */
   private followUpCount: Map<Intent, number> = new Map();
 
   /**
    * Creates a new State instance
-   * Initializes the state with user ID and session information
-   * 
    * @param userId The unique identifier for the user
    * @param sessionId The session identifier
    */
@@ -75,13 +46,10 @@ export class State {
   /**
    * Follow-up count management
    * These methods track how many times we've followed up on specific intents
-   * This helps prevent excessive follow-ups on the same topic
    */
   
   /**
    * Gets the follow-up count for a specific intent
-   * Used to determine if we should continue asking about a topic
-   * 
    * @param intent The intent to check
    * @returns The number of follow-ups for this intent
    */
@@ -91,8 +59,6 @@ export class State {
 
   /**
    * Increments the follow-up count for a specific intent
-   * Called when we ask a follow-up question about an intent
-   * 
    * @param intent The intent to increment
    */
   incrementFollowUpCount(intent: Intent) {
@@ -101,8 +67,6 @@ export class State {
 
   /**
    * Resets the follow-up count for a specific intent
-   * Called when an intent is successfully resolved
-   * 
    * @param intent The intent to reset
    */
   resetFollowUpCount(intent: Intent) {
@@ -111,7 +75,6 @@ export class State {
 
   /**
    * Clears all follow-up counts
-   * Used when starting a new conversation or topic
    */
   clearAllFollowUpCounts() {
     this.followUpCount.clear();
@@ -120,13 +83,10 @@ export class State {
   /**
    * Customer preferences management
    * These methods handle user preferences for various features
-   * Preferences are stored persistently across sessions
    */
   
   /**
    * Gets a specific customer preference
-   * Retrieves stored preference values like hiking location, difficulty, etc.
-   * 
    * @param key The preference key to retrieve
    * @returns The preference value
    */
@@ -136,8 +96,6 @@ export class State {
 
   /**
    * Sets a specific customer preference
-   * Stores user preferences for future reference
-   * 
    * @param key The preference key to set
    * @param value The preference value
    */
@@ -147,8 +105,6 @@ export class State {
 
   /**
    * Clears a specific customer preference
-   * Removes a stored preference when it's no longer relevant
-   * 
    * @param key The preference key to clear
    */
   clearPreference(key: PreferenceKey) {
@@ -158,12 +114,10 @@ export class State {
   /**
    * Order information management
    * These methods handle customer order data
-   * Includes current and past orders
    */
   
   /**
    * Clears the current order information
-   * Used when finishing an order-related conversation
    */
   clearOrderInfo() {
     this.orderInfo = null;
@@ -171,8 +125,6 @@ export class State {
 
   /**
    * Adds an order to the past order history
-   * Stores completed orders for future reference
-   * 
    * @param orderInfo The order to add
    */
   addPastOrderInfo(orderInfo: Order) {
@@ -181,8 +133,6 @@ export class State {
 
   /**
    * Gets all past orders
-   * Retrieves the customer's order history
-   * 
    * @returns Array of past orders
    */
   getPastOrderInfo(): Order[] {
@@ -192,13 +142,10 @@ export class State {
   /**
    * Intent management
    * These methods track and resolve user intents
-   * Helps ensure all customer requests are addressed
    */
   
   /**
    * Adds an intent to the unresolved intents set
-   * Marks a topic that needs to be addressed
-   * 
    * @param intent The intent to add
    */
   addUnresolvedIntents(intent: Intent) {
@@ -207,8 +154,6 @@ export class State {
 
   /**
    * Marks an intent as resolved
-   * Called when a customer request has been fully addressed
-   * 
    * @param intent The intent to resolve
    */
   resolveIntent(intent: Intent) {
@@ -217,8 +162,6 @@ export class State {
 
   /**
    * Gets all unresolved intents
-   * Used to follow up on previously mentioned but unaddressed topics
-   * 
    * @returns Array of unresolved intent strings
    */
   getUnresolvedIntents(): string[] {
@@ -228,13 +171,10 @@ export class State {
   /**
    * Promo code management
    * These methods handle promotional codes
-   * Tracks active promotions for the customer
    */
   
   /**
    * Updates the current promo code
-   * Sets an active promotion for the customer
-   * 
    * @param promoCode The promo code to set
    */
   updatePromoCode(promoCode: PromoCode) {
@@ -243,7 +183,6 @@ export class State {
 
   /**
    * Clears the current promo code
-   * Removes an expired or used promotion
    */
   clearPromoCode() {
     this.promoCode = null;
@@ -251,8 +190,6 @@ export class State {
   
   /**
    * Gets the current order information
-   * Retrieves details about the order being discussed
-   * 
    * @returns The current order or null
    */
   getOrderInfo(): Order | null {
@@ -261,8 +198,6 @@ export class State {
 
   /**
    * Gets the current promo code
-   * Retrieves the active promotion if any
-   * 
    * @returns The current promo code or null
    */
   getPromoCode(): PromoCode | null {
@@ -271,8 +206,6 @@ export class State {
 
   /**
    * Updates the current order information
-   * Modifies or creates order details based on customer input
-   * 
    * @param partialOrderInfo The order information to update
    */
   updateOrderInfo(partialOrderInfo: Partial<Order>) {
@@ -292,8 +225,6 @@ export class State {
   
   /**
    * Checks if the order information is complete
-   * Verifies that we have enough details to process an order
-   * 
    * @returns True if both email and order number are provided
    */
   hasCompleteOrderInfo(): boolean {
@@ -303,13 +234,10 @@ export class State {
   /**
    * Customer information management
    * These methods handle basic customer data
-   * Stores personal information for personalization
    */
   
   /**
    * Gets the customer information
-   * Retrieves personal details for the customer
-   * 
    * @returns The customer info or null
    */
   getCustomerInfo(): CustomerInfo | null {
@@ -318,8 +246,6 @@ export class State {
 
   /**
    * Updates the customer information
-   * Stores or modifies customer personal details
-   * 
    * @param name The customer's name
    * @param email The customer's email
    */
@@ -330,13 +256,10 @@ export class State {
   /**
    * Conversation management
    * These methods handle the conversation history
-   * Tracks the entire interaction for context
    */
   
   /**
    * Adds an entry to the conversation history
-   * Records each message in the conversation
-   * 
    * @param role The role of the message sender
    * @param content The message content
    */
@@ -346,8 +269,6 @@ export class State {
 
   /**
    * Gets the entire conversation history
-   * Retrieves all messages for context
-   * 
    * @returns Array of conversation entries
    */
   getConversationHistory(): ConversationEntry[] {
@@ -356,7 +277,6 @@ export class State {
 
   /**
    * Clears the conversation history
-   * Resets the conversation when starting fresh
    */
   clearConversationHistory() {
     this.conversation = [];
@@ -364,8 +284,6 @@ export class State {
 
   /**
    * Gets the last N conversation entries
-   * Retrieves recent context without the entire history
-   * 
    * @param n The number of entries to retrieve
    * @returns Array of the last N conversation entries
    */

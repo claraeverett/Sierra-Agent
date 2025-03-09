@@ -1,7 +1,7 @@
-import { openai } from "../../config/openai";
+import { openai } from '@/services/api/clients';
 import { ChatCompletionMessageParam } from "openai/resources";
-import { AI_CONSTANTS } from "./index";
-import { State } from "../../state/state";
+import { AI_CONSTANTS } from '@/services/ai/index';
+import { State } from '@/core/state/state';
 /**
  * Generates a response using the chat completion API
  * @param conversationHistory Array of previous messages in the conversation

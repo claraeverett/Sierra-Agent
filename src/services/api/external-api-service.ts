@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { ENDPOINTS } from './endpoints'
+import { ENDPOINTS } from '@/services/api/endpoints'
 import FormData from "form-data"; // form-data v4.0.1
 import Mailgun from "mailgun.js"; // 
-import { EMAIL_CONFIG } from '../../config/constants';
+import { EMAIL_CONFIG } from '@/config/constants';
 
 /**
  * Formats weather data into a user-friendly string

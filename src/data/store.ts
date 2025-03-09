@@ -1,5 +1,5 @@
-import { ordersMap, productsMap } from "./mockData/data";
-import { Order, Product } from "../types/types";
+import { ordersMap, productsMap } from '@/data/mockData/data';
+import { Order, Product } from '@/types/types';
 
 /**
  * Retrieves an order by order number and email.

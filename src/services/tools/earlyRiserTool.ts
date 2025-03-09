@@ -1,13 +1,10 @@
-import { ToolResponse } from './tools';
-import { Tool } from '../../types/types';
-import { State } from '../../state/state';
-import { EARLY_RISERS } from '../../config/constants';
-import { EARLY_RISERS_RESPONSE } from '../../prompts/earlyRisers';
-import { getTime, getPromoCode, timeIsToday } from '../../utils/utils';
+import { ToolResponse } from '@/services/tools/toolExport';
+import { Tool, EarlyRisersParams } from '@/types/types';
+import { State } from '@/core/state/state';
+import { EARLY_RISERS } from '@/config/constants';
+import { EARLY_RISERS_RESPONSE } from '@/prompts/early-riser-prompts';
+import { getTime, getPromoCode, timeIsToday } from '@/utils/utils';
 
-interface EarlyRisersParams {
-  productName?: string;
-}
 
 export const earlyRisersTool: Tool = {
   name: 'earlyRisers',
@@ -78,8 +75,6 @@ export const earlyRisersTool: Tool = {
       timeZone: EARLY_RISERS.TIMEZONE,
       timeZoneName: 'short'
     });
-
-    state.addUnresolvedIntents('EarlyRisers');
     
     return {
       success: false,

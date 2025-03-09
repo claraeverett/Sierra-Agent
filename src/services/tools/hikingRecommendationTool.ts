@@ -1,25 +1,23 @@
-import { ToolResponse } from "./tools";
-import { State } from "../../state/state";
-import { Tool } from "../../types/types";
-import { HIKING_RECOMMENDATION_PROMPT } from "../../prompts/systemPrompts";
-import { COLLECT_HIKING_PREFERENCES_RESPONSE } from "../../prompts/hikingRecommendation";
-import { PreferenceKey } from "../../state/customerPreferences";
-import { modelResponse } from "../ai/aiService";
-import { HIKING_RECOMMENDATION_PREFERENCES } from "../../config/constants";
-import { apiService, formatWeatherData } from "../api/apiService";
+import { ToolResponse } from '@/services/tools/toolExport';
+import { State } from '@/core/state/state';
+import { Tool, PreferenceKey, HikingParams } from '@/types/types';
+import { HIKING_RECOMMENDATION_PROMPT } from '@/prompts/system-prompts';
+import { COLLECT_HIKING_PREFERENCES_RESPONSE } from '@/prompts/hiking-prompts';
+import { modelResponse } from '@/services/ai/openai-service';
+import { HIKING_RECOMMENDATION_PREFERENCES } from '@/config/constants';
+import { apiService, formatWeatherData } from '@/services/api/external-api-service';
 
-interface HikingParams {
-  location: string;
-  difficulty?: "easy" | "moderate" | "hard";
-  length?: number; // in miles
-  playlist?: string;
-}
-
+/**
+ * Interface for hiking response
+ */
 interface HikingResponse {
     region: RegionInfo;
     trails: HikingTrail[];
   }
 
+  /**
+   * Interface for region information
+   */
   interface RegionInfo {
     name: string;
     zipcode: string;
@@ -27,7 +25,10 @@ interface HikingResponse {
     latitude: number;
     longitude: number;
   }
-  
+
+  /**
+   * Interface for hiking trail information
+   */
   interface HikingTrail {
     name: string;
     location: string;
@@ -39,6 +40,11 @@ interface HikingResponse {
     considerations: string;
   }
 
+/**
+ * Parses the hiking response
+ * @param response The response from the hiking tool
+ * @returns The parsed hiking response
+ */
 const parseHikingResponse = (response: string) => {
     try {
         // Remove markdown code block tags if present
@@ -69,6 +75,12 @@ const parseHikingResponse = (response: string) => {
       }
 }
 
+/**
+ * Gets hiking recommendations
+ * @param params The hiking parameters
+ * @param state The state
+ * @returns The hiking recommendations
+ */
 export const getHikingRecommendations = async (params: HikingParams, state: State): Promise<ToolResponse> => {      
   try {
 
@@ -143,19 +155,19 @@ export const getHikingRecommendations = async (params: HikingParams, state: Stat
     // TO DO: Clean Up! 
 
     if (!state.getPreference(PreferenceKey.location)) {
-        state.setPreference(PreferenceKey.location, HIKING_RECOMMENDATION_PREFERENCES.LOCATION);
+        state.setPreference(PreferenceKey.location, HIKING_RECOMMENDATION_PREFERENCES.DEFAULT_LOCATION);
     }
 
     if (!state.getPreference(PreferenceKey.difficulty)) {
-        state.setPreference(PreferenceKey.difficulty, HIKING_RECOMMENDATION_PREFERENCES.DIFFICULTY);
+        state.setPreference(PreferenceKey.difficulty, HIKING_RECOMMENDATION_PREFERENCES.DEFAULT_DIFFICULTY);
     }
 
     if (!state.getPreference(PreferenceKey.length)) {
-        state.setPreference(PreferenceKey.length, HIKING_RECOMMENDATION_PREFERENCES.LENGTH);
+        state.setPreference(PreferenceKey.length, HIKING_RECOMMENDATION_PREFERENCES.DEFAULT_LENGTH);
     }
 
     if (!state.getPreference(PreferenceKey.playlist)) {
-        state.setPreference(PreferenceKey.playlist, HIKING_RECOMMENDATION_PREFERENCES.PLAYLIST);
+        state.setPreference(PreferenceKey.playlist, HIKING_RECOMMENDATION_PREFERENCES.DEFAULT_PLAYLIST);
     }
     
 

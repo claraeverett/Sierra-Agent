@@ -1,6 +1,6 @@
-import { modelResponse } from './aiService';
-import { classifyIntent } from './intentClassifier';
-import { generateResponse } from './generateResponse';
+import { modelResponse } from '@/services/ai/openai-service';
+import { classifyIntent } from '@/services/ai/intent-classifier';
+import { generateResponse } from '@/services/ai/response-generator';
 
 // Export all AI-related functions
 export {

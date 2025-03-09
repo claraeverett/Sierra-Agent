@@ -1,5 +1,9 @@
-import { PromoCode } from '../types/earlyRisers';
+import { PromoCode } from '@/types/types';
 
+/**
+ * Class for managing promo codes
+ * Stores and retrieves promo code information
+ */
 export class PromoCodeStore {
   private code: PromoCode | null = null;
 

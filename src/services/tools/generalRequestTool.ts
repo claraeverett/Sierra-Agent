@@ -2,10 +2,6 @@ import { Tool } from '@/types/types';
 import { ToolResponse } from '@/services/tools/toolExport';
 import { State } from '@/core/state/state';
 
-/**
- * Tool for handling general inquiries and unresolved intents
- * Provides helpful suggestions when no specific intent is detected
- */
 export const generalTool: Tool = {
   name: 'general',
   description: 'Handle general inquiries',
@@ -15,11 +11,7 @@ export const generalTool: Tool = {
     
     if (unresolvedIntents.length > 0) {
       // Create a message about unresolved intents
-      const unresolvedMessage = `I notice we haven't fully addressed your previous ${
-        unresolvedIntents.length > 1 ? 'requests' : 'request'
-      } about ${unresolvedIntents.join(', ')}. Would you like to continue with ${
-        unresolvedIntents.length > 1 ? 'those' : 'that'
-      } first?`;
+      const unresolvedMessage = `I notice we haven't fully addressed your previous ${unresolvedIntents.length > 1 ? 'requests' : 'request'} about ${unresolvedIntents.join(', ')}. Would you like to continue with ${unresolvedIntents.length > 1 ? 'those' : 'that'} first?`;
       
       return {
         success: true,
@@ -43,4 +35,4 @@ Could you please let me know which of these services you're interested in, or pr
       promptTemplate: suggestionsMessage
     };
   }
-}; 
+};

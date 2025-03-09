@@ -1,11 +1,25 @@
+/**
+ * Gets the current time
+ * @returns The current date and time
+ */
 export const getTime = () => {
     return new Date();
 };
 
+/**
+ * Generates a promo code
+ * @returns A promo code string
+ */
 export const getPromoCode = () => {
     return `EARLY${Math.random().toString(36).substring(2, 7).toUpperCase()}`
 };
 
+/**
+ * Checks if a given time is today
+ * @param time The time to check
+ * @param timeZone The time zone to use
+ * @param timeNow The current time
+ */
 export const timeIsToday = (time: Date, timeZone: string,timeNow:Date) => {
     return new Date(time).toLocaleString('en-US', { timeZone: timeZone}).split(',')[0] === 
                            new Date(timeNow).toLocaleString('en-US', { timeZone: timeZone }).split(',')[0];

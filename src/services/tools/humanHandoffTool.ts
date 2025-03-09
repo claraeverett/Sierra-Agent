@@ -1,21 +1,23 @@
-import { Tool } from '../../types/types';
-import { State } from '../../state/state';
-import { ToolResponse } from './tools';
-import { HUMAN_HELP_PROMPT } from '../../prompts/systemPrompts';
-import { apiService } from '../api/apiService';
-import { generateCustomerId } from '../../utils/utils';
-import { openai } from '../../config/openai';
-import { AI_CONSTANTS } from '../ai/index';
+import { Tool, HumanHelpParams } from '@/types/types';
+import { State } from '@/core/state/state';
+import { ToolResponse } from '@/services/tools/toolExport';
+import { HUMAN_HELP_PROMPT } from '@/prompts/system-prompts';
+import { HUMAN_HELP_RESPONSE } from '@/prompts/human-handoff-prompts';
+import { apiService } from '@/services/api/external-api-service';
+import { generateCustomerId } from '@/utils/utils';
+import { openai } from '@/services/api/clients';
+import { AI_CONSTANTS } from '@/services/ai/index';
 
-interface HumanHelpParams {
-    customerRequest: string;
-}
-
-
+/**
+ * Tool for requesting human assistance for customer support
+ * Generates an email to the support team with details about the customer's request
+ */
 export const humanHelpTool: Tool = {
     name: 'humanHelp',
     description: 'Request human assistance for customer support',
     execute: async (params: HumanHelpParams, state: State): Promise<ToolResponse> => {  
+        state.addUnresolvedIntents("HumanHelp");
+        
         console.log('Executing humanHelpTool with params:', params);
         
         try {
@@ -50,22 +52,23 @@ export const humanHelpTool: Tool = {
             
             if (emailResult) {
                 console.log('Email sent successfully:', emailResult);
+                state.resolveIntent("HumanHelp");
                 return {
                     success: true,
-                    promptTemplate: "I've notified our customer service team about your request. A human agent will contact you shortly to provide personalized assistance. Is there anything else I can help you with in the meantime?"
+                    promptTemplate: HUMAN_HELP_RESPONSE.EMAIL_SENT
                 };
             } else {
                 console.error('Failed to send email');
                 return {
                     success: false,
-                    promptTemplate: "I'm trying to connect you with a human agent, but we're experiencing some technical difficulties. Please try again in a few moments or call our customer service line directly at 1-800-SIERRA-HELP."
+                    promptTemplate: HUMAN_HELP_RESPONSE.EMAIL_FAILED
                 };
             }
         } catch (error) {
             console.error('Error in humanHelpTool:', error);
             return {
                 success: false,
-                promptTemplate: "I apologize, but I'm having trouble connecting you with a human agent right now. Please try again or contact us directly at support@sierraoutfitters.com."
+                promptTemplate: HUMAN_HELP_RESPONSE.ERROR
             };
         }
     }

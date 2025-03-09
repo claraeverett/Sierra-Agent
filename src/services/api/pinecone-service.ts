@@ -1,19 +1,10 @@
-import { Pinecone } from "@pinecone-database/pinecone";
-import OpenAI from "openai";
 import * as fs from "fs-extra";
-import * as dotenv from "dotenv";
+import { PINECONE_CONSTANTS } from '@/config/constants';
+import { openai,pinecone } from '@/services/api/clients';
 
-dotenv.config();
-
-// Initialize OpenAI & Pinecone
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
-const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY! });
-
-// Constants
-const INDEX_NAME = "sierra-agent-faq"; // Ensure this matches your Pinecone index name
-const EMBEDDING_MODEL = "text-embedding-3-small"; // 1024 dimensions
-const VECTOR_DIMENSION = 1536;
-
+/**
+ * Uploads the Company FAQ to Pinecone
+ */
 export const uploadFaq = async () => {
   try {
     // Read FAQ file
@@ -28,19 +19,19 @@ export const uploadFaq = async () => {
 
     // Ensure Pinecone index exists
     const indexList = await pinecone.listIndexes();
-    const indexExists = indexList.indexes?.some(idx => idx.name === INDEX_NAME) || false;
+    const indexExists = indexList.indexes?.some(idx => idx.name === PINECONE_CONSTANTS.INDEX_NAME) || false;
     
     if (!indexExists) {
       await pinecone.createIndex({
-        name: INDEX_NAME,
-        dimension: VECTOR_DIMENSION,
+        name: PINECONE_CONSTANTS.INDEX_NAME,
+        dimension: PINECONE_CONSTANTS.VECTOR_DIMENSION,
         metric: "cosine",
         spec: { serverless: { cloud: "aws", region: "us-west-2" } }
       });
       console.log("Created Pinecone index.");
     }
 
-    const index = pinecone.index(INDEX_NAME);
+    const index = pinecone.index(PINECONE_CONSTANTS.INDEX_NAME);
 
     // Loop through FAQ sections, create embeddings & upload to Pinecone
     for (let i = 0; i < faqSections.length; i++) {
@@ -49,15 +40,15 @@ export const uploadFaq = async () => {
 
       // Generate vector embedding
       const embeddingResponse = await openai.embeddings.create({
-        model: EMBEDDING_MODEL,
+        model: PINECONE_CONSTANTS.EMBEDDING_MODEL,
         input: text
       });
 
       const embedding = embeddingResponse.data[0].embedding;
       
       // Verify embedding dimension
-      if (embedding.length !== VECTOR_DIMENSION) {
-        console.error(`Embedding dimension mismatch: got ${embedding.length}, expected ${VECTOR_DIMENSION}`);
+      if (embedding.length !== PINECONE_CONSTANTS.VECTOR_DIMENSION) {
+        console.error(`Embedding dimension mismatch: got ${embedding.length}, expected ${PINECONE_CONSTANTS.VECTOR_DIMENSION}`);
         continue;
       }
 

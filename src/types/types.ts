@@ -1,46 +1,172 @@
-import { State } from '../state/state';
-import { ToolResponse } from '../services/tools/tools';
-  
-  export interface Product {
-    productName: string;
-    sku: string;
-    inventory: number;
-    description: string;
-    tags: string[];
-  }
-  
-  export type Intent = 
-    | 'OrderStatus' 
-    | 'EarlyRisers' 
-    | 'ProductAvailability'
-    | 'ProductRecommendation' 
-    | 'HikingRecommendation' 
-    | 'General' 
-    | 'ProvideOrderInformation';
+import { State } from '@/core/state/state';
+import { ToolResponse } from '@/services/tools/toolExport';
 
-    export type ConversationEntry = {
-    role: 'user' | 'system' | 'assistant';
-    content: string;
-  };
+/**
+ * Product information structure
+ */
+export interface Product {
+  productName: string;
+  sku: string;
+  inventory: number;
+  description: string;
+  tags: string[];
+}
 
-  export interface IntentClassification {
-    intents: string[];
-    params: Record<string, any>;
-  }
+/**
+ * Supported intents for the agent
+ */
+export type Intent = 
+  | 'OrderStatus' 
+  | 'EarlyRisers' 
+  | 'HikingRecommendation' 
+  | 'General' 
+  | 'HumanHelp'
+  | 'SearchFAQ';
 
-  export interface Tool {
-    name: string;
-    description: string;
-    execute: (params: any, state: State) => Promise<ToolResponse>;
-  }
+/**
+ * Structure for conversation entries
+ */
+export type ConversationEntry = {
+  role: 'user' | 'system' | 'assistant';
+  content: string;
+};
 
-  export interface Order {
-    customerName: string;
-    email: string;
-    orderNumber: string;
-    productsOrdered: string[];
-    status: string;
-    trackingNumber: string | null;
-  }
+/**
+ * Intent classification result structure
+ */
+export interface IntentClassification {
+  intents: string[];
+  params: Record<string, any>;
+}
 
-  export type OrderStatus = 'Processing' | 'Shipped' | 'Delivered' | 'Error' | 'In-Transit';
+/**
+ * Tool interface for all agent tools
+ */
+export interface Tool {
+  name: string;
+  description: string;
+  execute: (params: any, state: State) => Promise<ToolResponse>;
+}
+
+/**
+ * Customer order information
+ */
+export interface Order {
+  customerName: string;
+  email: string;
+  orderNumber: string;
+  productsOrdered: string[];
+  status: string;
+  trackingNumber: string | null;
+}
+
+/**
+ * Possible order status values
+ */
+export type OrderStatus = 'Processing' | 'Shipped' | 'Delivered' | 'Error' | 'In-Transit';
+
+/**
+ * Promo code information
+ */
+export interface PromoCode {
+  code: string;
+  createdAt: Date;
+  productName?: string;
+}
+
+/**
+ * Enum for customer preference keys
+ */
+export enum PreferenceKey {
+  location = 'hikingLocations',
+  length = 'hikingLength',
+  playlist = 'hikingPlaylist',
+  difficulty = 'hikingDifficulty',
+}
+
+/**
+ * Interface for human help parameters
+ */
+export interface HumanHelpParams {
+  customerRequest: string;
+}
+
+/**
+ * Interface for customer information
+ */
+export interface CustomerInfo {
+  name: string;
+  email: string;
+}
+
+/**
+ * Interface for early risers parameters
+ */
+export interface EarlyRisersParams {
+  productName?: string;
+}
+
+/**
+ * Interface for hiking parameters
+ */
+export interface HikingParams {
+  location: string;
+  difficulty?: "easy" | "moderate" | "hard";
+  length?: number; // in miles
+  playlist?: string;
+}
+
+/**
+ * Interface for general parameters
+ */
+export interface GeneralParams {
+  customerRequest: string;
+}
+
+/**
+ * Interface for order status parameters
+ */
+export interface OrderStatusParams {
+  orderId?: string;
+  email?: string;
+}
+
+/**
+ * Interface for FAQ parameters
+ */
+export interface FAQParams {
+  query: string;
+}
+
+/**
+ * Interface for hiking response
+ */
+export interface HikingResponse {
+  region: RegionInfo;
+  trails: HikingTrail[];
+}
+
+/**
+ * Interface for region information
+ */
+export interface RegionInfo {
+  name: string;
+  zipcode: string;
+  country_code: string;
+  latitude: number;
+  longitude: number;
+}
+
+/**
+ * Interface for hiking trail information
+ */
+export interface HikingTrail {
+  name: string;
+  location: string;
+  difficulty: string;
+  length: string;
+  elevation_gain: string;
+  latitude: number;
+  longitude: number;
+  considerations: string;
+}

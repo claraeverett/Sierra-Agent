@@ -1,14 +1,9 @@
-import { ToolResponse } from './tools';
-import { Tool } from '../../types/types';
-import { State } from '../../state/state';
-import { ORDER_STATUS_RESPONSE } from '../../prompts/orderStatus';
-import { getOrderStatus, getProductDetails } from '../../data/store';
+import { ToolResponse } from '@/services/tools/toolExport';
+import { Tool, OrderStatusParams } from '@/types/types';
+import { State } from '@/core/state/state';
+import { ORDER_STATUS_RESPONSE } from '@/prompts/order-status-prompts';
+import { getOrderStatus, getProductDetails } from '@/data/store';
 
-// Parameter types for order status requests
-interface OrderStatusParams {
-  orderId?: string;
-  email?: string;
-}
 
 export const orderStatusTool: Tool = {
   name: 'orderStatus',
