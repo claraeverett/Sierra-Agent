@@ -6,7 +6,7 @@ import { COLLECT_HIKING_PREFERENCES_RESPONSE } from "../../prompts/hikingRecomme
 import { PreferenceKey } from "../../state/customerPreferences";
 import { modelResponse } from "../ai/aiService";
 import { HIKING_RECOMMENDATION_PREFERENCES } from "../../config/constants";
-import { apiService } from "../api/apiService";
+import { apiService, formatWeatherData } from "../api/apiService";
 
 interface HikingParams {
   location: string;
@@ -184,34 +184,47 @@ export const getHikingRecommendations = async (params: HikingParams, state: Stat
       };
     }
     console.log("hikes.region", hikes.region);
-    const coordinates = await apiService.getCoordinates(hikes.region.zipcode, hikes.region.country_code);
-    if (coordinates) {
+    let weatherInfo = "";
+    try {
+      const coordinates = await apiService.getCoordinates(hikes.region.zipcode, hikes.region.country_code);
+      if (coordinates) {
         console.log("We have coordinates");
-      const weather = await apiService.getWeather(coordinates.lat, coordinates.lon);
-      console.log("weather", weather);
+        const weather = await apiService.getWeather(coordinates.lat, coordinates.lon);
+        
+        // Format weather data if available
+        if (weather) {
+          weatherInfo = formatWeatherData(weather);
+        }
+      }
+    } catch (error) {
+      console.error("Error getting weather data:", error);
+      // Continue without weather data
     }
     // Create a formatted description of each trail
     const trailsDescription = hikes.trails.map((trail, index) => {
-      return `**${index + 1}. ${trail.name}**
-• **Location:** ${trail.location}
-• **Difficulty:** ${trail.difficulty}
-• **Length:** ${trail.length}
-• **Elevation Gain:** ${trail.elevation_gain}
-• **Special Considerations:** ${trail.considerations || "None"}`;
+      return `**${index + 1}. ${trail.name}** - ${trail.difficulty}, ${trail.length}
+• Located in ${trail.location}
+• Elevation gain: ${trail.elevation_gain || "minimal"}
+${trail.considerations ? `• Note: ${trail.considerations}` : ""}`;
     }).join("\n\n");
 
     // Create a dynamic prompt template with the hiking data
     
     state.resolveIntent("HikingRecommendation");
+    
+    // Combine trail descriptions with weather information
+    const fullDescription = `${trailsDescription}${weatherInfo}`;
+    
     return {
       success: true,
       details: {
         hikes,
         location: location,
         difficulty: difficulty,
-        length: length
+        length: length,
+        weather: weatherInfo.trim() ? true : false
       },
-      promptTemplate: COLLECT_HIKING_PREFERENCES_RESPONSE.SUCCESS({hikes: trailsDescription})
+      promptTemplate: COLLECT_HIKING_PREFERENCES_RESPONSE.SUCCESS({hikes: fullDescription})
     };
   } catch (error) {
     console.error("Error fetching hiking trails:", error);

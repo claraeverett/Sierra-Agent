@@ -30,6 +30,6 @@ Would you like to:
   
  SUCCESS: (details: { 
     hikes: string
-  }) => `The customer's hiking recommendations are: ${details.hikes}.
-    Provide this information in a friendly, conversational way and ask if they need anything else.`
+  }) => `Here are hiking recommendations: ${details.hikes}
+    Present this information in a friendly, conversational way. Mention the trails, difficulty, and weather if available. Ask if they need anything else.`
 };

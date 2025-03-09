@@ -20,7 +20,7 @@ async function modelResponse(
       ...(includeHistory ? conversationHistory : [])
     ],
     temperature: 0.7,  // Higher values make output more random
-    max_tokens: 200,   // Limit response length
+    max_tokens: 300,   // Increased from 200 to allow for longer responses
   });
 }
 
