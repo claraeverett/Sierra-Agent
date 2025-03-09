@@ -11,7 +11,9 @@ import { State } from "../../state/state";
 async function modelResponse(
   conversationHistory: ChatCompletionMessageParam[] = [], 
   systemPrompt: string,
-  includeHistory: boolean = true
+  includeHistory: boolean = true,
+  temperature: number = 0.7,
+  maxTokens: number = 300
 ) {
   return await openai.chat.completions.create({
     model: AI_CONSTANTS.DEFAULT_MODEL,
@@ -19,8 +21,8 @@ async function modelResponse(
       { role: "assistant", content: systemPrompt },
       ...(includeHistory ? conversationHistory : [])
     ],
-    temperature: 0.7,  // Higher values make output more random
-    max_tokens: 300,   // Increased from 200 to allow for longer responses
+    temperature: temperature,  // Higher values make output more random
+    max_tokens: maxTokens,   // Increased from 200 to allow for longer responses
   });
 }
 

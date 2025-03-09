@@ -114,6 +114,7 @@ export const getHikingRecommendations = async (params: HikingParams, state: Stat
     if(state.getFollowUpCount("HikingRecommendation") == 0) {
 
         if (!params.location) {
+            console.log("No location provided");
             state.incrementFollowUpCount("HikingRecommendation");
             return {
             success: false,
@@ -214,7 +215,7 @@ ${trail.considerations ? `• Note: ${trail.considerations}` : ""}`;
     
     // Combine trail descriptions with weather information
     const fullDescription = `${trailsDescription}${weatherInfo}`;
-    
+    state.resetFollowUpCount("HikingRecommendation");
     return {
       success: true,
       details: {

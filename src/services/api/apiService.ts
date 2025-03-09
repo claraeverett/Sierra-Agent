@@ -1,5 +1,8 @@
 import axios from 'axios'
 import { ENDPOINTS } from './endpoints'
+import FormData from "form-data"; // form-data v4.0.1
+import Mailgun from "mailgun.js"; // 
+import { EMAIL_CONFIG } from '../../config/constants';
 
 /**
  * Formats weather data into a user-friendly string
@@ -54,5 +57,39 @@ export const apiService = {
       console.log("error", error);
       return null;
     }
+  },
+
+  sendEmail: async (body: string, customerId: string) => {
+    try {
+      console.log("Attempting to send email with body:", body);
+      console.log("Using Mailgun API key:", process.env.MAILGUN_API_KEY ? "API key exists" : "API key missing");
+      console.log("Using Mailgun domain:", process.env.MAILGUN_DOMAIN);
+      
+      const mailgun = new Mailgun(FormData);
+      const mg = mailgun.client({
+        username: 'api',
+        key: process.env.MAILGUN_API_KEY || ''
+      });
+
+      const result = await mg.messages.create(
+        process.env.MAILGUN_DOMAIN || '',
+        {
+          from: EMAIL_CONFIG.FROM,
+          to: EMAIL_CONFIG.TO,
+          subject: `${EMAIL_CONFIG.SUBJECT} [${customerId}]`,
+          text: body
+        }
+      );
+
+      console.log("Email sent successfully:", result);
+      return result;
+    } catch (error) {
+      console.error("Error sending email:", error);
+      if (error instanceof Error) {
+        console.error("Error message:", error.message);
+      }
+      return null;
+    }
   }
 }
+

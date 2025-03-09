@@ -3,8 +3,9 @@ import * as readline from 'readline';
 import { classifyIntent } from './services/ai/intentClassifier';
 import { Agent } from './services/agent';
 import { State } from './state/state';
+import { generateCustomerId } from './utils/utils';
 
-const state = new State("user_123", "session_456");
+const state = new State(generateCustomerId(), "session_456");
 dotenv.config();
 
 
