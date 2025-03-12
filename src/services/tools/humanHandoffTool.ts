@@ -5,34 +5,59 @@ import { HUMAN_HELP_PROMPT } from '@/prompts/system-prompts';
 import { HUMAN_HELP_RESPONSE } from '@/prompts/human-handoff-prompts';
 import { apiService } from '@/services/api/external-api-service';
 import { generateCustomerId } from '@/utils/utils';
-import { openai } from '@/services/api/clients';
 import { AI_CONSTANTS } from '@/services/ai/index';
+import { Intent } from '@/types/types';
+import { modelResponse } from '@/services/ai/openai-service';
 
 /**
- * Tool for requesting human assistance for customer support
- * Generates an email to the support team with details about the customer's request
+ * Human Handoff Tool
+ * 
+ * This module handles requests for human assistance by generating and sending
+ * a detailed email to the customer support team. The email summarizes the
+ * customer's issue, conversation history, and provides context to help the
+ * support team address the customer's needs efficiently.
+ * 
+ * The tool follows these steps:
+ * 1. Generate a structured email using the conversation history
+ * 2. Send the email to the support team via the email service
+ * 3. Provide confirmation to the customer that help is on the way
  */
 export const humanHelpTool: Tool = {
     name: 'humanHelp',
     description: 'Request human assistance for customer support',
     execute: async (params: HumanHelpParams, state: State): Promise<ToolResponse> => {  
-        state.addUnresolvedIntents("HumanHelp");
+        // Track this intent as unresolved until we successfully send the email
+        state.addUnresolvedIntents(Intent.HumanHelp);
         
         console.log('Executing humanHelpTool with params:', params);
         
         try {
             // Generate a customer ID if not already present in state
+            // This ensures each customer has a unique identifier for tracking
             if (!state.userId) {
                 state.userId = generateCustomerId();
             }
             
-            // Get conversation history
+            // Get conversation history to provide context in the email
             const conversationHistory = state.getConversationHistory();
             
-            // Create a custom prompt with explicit instructions
+            // Create a custom prompt with explicit instructions for generating the email
+            // The prompt is designed to create an internal email for the support team
             const systemPrompt = HUMAN_HELP_PROMPT(params.customerRequest);
+
+            // Generate the email content using the AI model
+            // Using low temperature for more deterministic output and higher token limit for detailed emails
+            const response = await modelResponse(
+                conversationHistory, 
+                systemPrompt, 
+                true,
+                AI_CONSTANTS.SEND_EMAIL_TEMPERATURE, 
+                AI_CONSTANTS.SEND_EMAIL_MAX_TOKENS
+            );
             
-            // Call OpenAI directly with a specific message structure for better control
+            // Note: The previous implementation used direct OpenAI API calls
+            // This was replaced with the modelResponse function for consistency
+            /*
             const response = await openai.chat.completions.create({
                 model: AI_CONSTANTS.DEFAULT_MODEL,
                 messages: [
@@ -41,23 +66,25 @@ export const humanHelpTool: Tool = {
                 ],
                 temperature: 0.1,  // Very low temperature for deterministic output
                 max_tokens: 800   // Increased token limit to ensure complete email
-            });
+            });*/
             
             // Extract the email body from the model response
             const emailBody = response.choices[0].message.content || '';
             console.log('Generated email body:', emailBody);
             
-            // Send the email with the user ID from the state
+            // Send the email to the support team with the customer ID for tracking
             const emailResult = await apiService.sendEmail(emailBody, state.userId);
             
             if (emailResult) {
+                // Email sent successfully - inform the customer and resolve the intent
                 console.log('Email sent successfully:', emailResult);
-                state.resolveIntent("HumanHelp");
+                state.resolveIntent(Intent.HumanHelp);
                 return {
                     success: true,
                     promptTemplate: HUMAN_HELP_RESPONSE.EMAIL_SENT
                 };
             } else {
+                // Email failed to send - inform the customer of the failure
                 console.error('Failed to send email');
                 return {
                     success: false,
@@ -65,6 +92,7 @@ export const humanHelpTool: Tool = {
                 };
             }
         } catch (error) {
+            // Handle any errors that occur during the process
             console.error('Error in humanHelpTool:', error);
             return {
                 success: false,

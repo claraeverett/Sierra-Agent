@@ -12,6 +12,7 @@ An AI-powered customer service agent for Sierra Outfitters, an outdoor gear and 
 - **Human Handoff**: Seamlessly transfers complex issues to human agents
 - **Conversation Management**: Maintains context throughout customer interactions
 - **Unresolved Intent Tracking**: Follows up on previously mentioned but unresolved requests
+- **Product Recommendations**: Suggests products based on customer preferences and history
 
 ## 🛠️ Technical Architecture
 
@@ -23,20 +24,48 @@ The project is built with a modular architecture that separates concerns:
 - **Intent Classification**: NLP-based intent detection using OpenAI's models
 - **Tool System**: Pluggable tools that handle specific customer intents
 - **Response Generation**: Context-aware response creation
+- **Agent System**: Coordinates tools and manages conversation flow
 
 ### Directory Structure
 
 ```
 src/
 ├── config/         # Configuration constants and environment setup
+├── core/           # Core application components
+│   ├── agent/      # Agent implementation for handling requests
+│   └── state/      # State management for conversation and user data
+├── data/           # Static data and sample information
 ├── prompts/        # System prompts for AI interactions
-├── services/       # Core service implementations
+│   ├── system-prompts.ts          # Main system prompts
+│   ├── hiking-prompts.ts          # Hiking-specific prompts
+│   ├── order-status-prompts.ts    # Order status prompts
+│   ├── early-riser-prompts.ts     # Early riser promotion prompts
+│   ├── human-handoff-prompts.ts   # Human handoff prompts
+│   ├── company-faq-prompts.ts     # FAQ prompts
+│   └── product-prompts.ts         # Product recommendation prompts
+├── services/       # Service implementations
 │   ├── ai/         # AI service integrations (OpenAI)
+│   │   ├── intent-classifier.ts   # Intent classification
+│   │   ├── openai-service.ts      # OpenAI API integration
+│   │   └── response-generator.ts  # Response generation
 │   ├── api/        # External API integrations
+│   │   ├── clients.ts             # API client initialization
+│   │   ├── endpoints.ts           # API endpoint definitions
+│   │   └── external-api-service.ts # External API service
 │   └── tools/      # Intent-specific tool implementations
-├── state/          # State management
+│       ├── toolExport.ts          # Tool registry and exports
+│       ├── orderStatusTool.ts     # Order status tool
+│       ├── hikingRecommendationTool.ts # Hiking recommendation tool
+│       ├── earlyRiserTool.ts      # Early riser promotion tool
+│       ├── searchFAQTool.ts       # FAQ search tool
+│       ├── humanHandoffTool.ts    # Human handoff tool
+│       ├── generalRequestTool.ts  # General inquiry tool
+│       ├── productInventory.ts    # Product inventory tool
+│       └── productRecommendation.ts # Product recommendation tool
 ├── types/          # TypeScript type definitions
 └── utils/          # Utility functions
+    ├── formatting.ts              # Data formatting utilities
+    └── utils.ts                   # General utilities
 ```
 
 ## 🚀 Getting Started
@@ -47,7 +76,8 @@ src/
 - npm or yarn
 - OpenAI API key
 - Mailgun API key (for email functionality)
-- Pinecone API key (for FAQ embeddings)
+- Pinecone API key (for FAQ and product embeddings)
+- OpenWeather API key (for weather data in hiking recommendations)
 
 ### Installation
 
@@ -90,6 +120,7 @@ Example interactions:
 - "Can I get hiking recommendations near Denver?"
 - "Tell me about the Early Risers promotion"
 - "I need help with my recent purchase"
+- "Can you recommend products for hiking in cold weather?"
 
 ## 🧩 Key Components
 
@@ -110,6 +141,8 @@ Each customer intent is handled by a specialized tool:
 - `earlyRisersTool`: Manages the Early Risers promotion
 - `searchFaqTool`: Searches the knowledge base for answers
 - `humanHelpTool`: Transfers to human customer support
+- `productInventoryTool`: Checks product inventory
+- `productRecommendationTool`: Provides product recommendations
 - `generalTool`: Handles general inquiries and fallbacks
 
 ### Response Generation
@@ -122,26 +155,15 @@ The agent generates natural, conversational responses using carefully crafted pr
 
 1. Create a new file in `src/services/tools/`
 2. Implement the `Tool` interface
-3. Add the tool to the `tools` object in `src/services/tools/toolsExport.ts`
-4. Update the intent classification prompt in `src/prompts/systemPrompts.ts`
+3. Add the tool to the `tools` object in `src/services/tools/toolExport.ts`
+4. Update the intent classification prompt in `src/prompts/system-prompts.ts`
 
 ### Modifying Prompts
 
-System prompts are stored in `src/prompts/systemPrompts.ts` and can be modified to adjust the agent's behavior and responses.
+System prompts are stored in `src/prompts/system-prompts.ts` and can be modified to adjust the agent's behavior and responses. Specialized prompts for specific tools are in their respective files in the `prompts` directory.
 
 ### Running Tests
 
 ```bash
 npm test
 ```
-
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🙏 Acknowledgments
-
-- OpenAI for providing the language models
-- Pinecone for vector database capabilities
-- Mailgun for email functionality
-- OpenWeatherMap for weather data integration

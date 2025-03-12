@@ -1,7 +1,7 @@
-import { INTENT_CLASSIFICATION_PROMPT } from '@/prompts/systemPrompts';
-import { intentClassifier } from '@/services/ai/openaiService';
+import { INTENT_CLASSIFICATION_PROMPT } from '@/prompts/system-prompts';
+import { intentClassifier } from '@/services/ai/openai-service';
 import { IntentClassification } from '@/types/types';
-import { State } from '@/state/state';
+import { State } from '@/core/state/state';
 
 /**
  * Classifies user intent based on their message

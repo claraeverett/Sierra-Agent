@@ -24,3 +24,13 @@ if (!orderId.startsWith("#")) {
 export function getProductDetails(sku: string): Product | null {
   return productsMap[sku] || null;
 }
+
+/**
+ * Retrieves unique tags from all products in the store.
+ * @returns Array of unique tags
+ */
+export const getUniqueTags = (): string[] => {
+  return Array.from(new Set(Object.values(productsMap).map((product) => product.tags).flat()));
+};
+
+

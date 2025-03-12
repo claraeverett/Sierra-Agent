@@ -22,6 +22,8 @@ async function chat() {
   console.log('Sierra Outfitters Assistant: How can I help you today?');
   
   while (true) {
+    
+    console.log("State", state);
     const userInput = await new Promise<string>(resolve => {
       rl.question('You: ', resolve);
     });
@@ -29,7 +31,9 @@ async function chat() {
     if (userInput.toLowerCase() === 'exit') break;
 
     try {
+      console.log(" ---------------------------------------------------------------")
       const classification = await classifyIntent(userInput, state);
+      console.log("Classification", classification);
       const response = await agent.handleRequest(classification, userInput);
       console.log('Sierra Outfitters Assistant:', response);
     } catch (error) {

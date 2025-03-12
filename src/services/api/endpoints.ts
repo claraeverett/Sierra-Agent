@@ -1,3 +1,7 @@
+
+/**
+ * Endpoints for the API
+ */
 export const ENDPOINTS = {
     COORDINATES: (zipcode:string,countrycode:string) => 
      `http://api.openweathermap.org/geo/1.0/zip?zip=${zipcode},${countrycode}&appid=${process.env.OPEN_WEATHER_API_KEY}`,

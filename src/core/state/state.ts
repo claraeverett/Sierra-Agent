@@ -1,14 +1,5 @@
-import { Order, ConversationEntry, PromoCode, PreferenceKey } from '@/types/types';
+import { Order, ConversationEntry, PromoCode, PreferenceKey, Intent, CustomerInfo, HikingParams } from '@/types/types';
 import { CustomerPreferences } from '@/core/state/user-preferences';
-import { Intent } from '@/types/types';
-
-/**
- * Interface representing customer information
- */
-interface CustomerInfo {
-  name: string;
-  email: string;
-}
 
 /**
  * Main state management class for the Sierra Outfitters agent
@@ -22,14 +13,13 @@ export class State {
   public userId: string;
   public sessionId: string;
   public promoCode: PromoCode | null = null;
-  public extractedParams: Record<string, any> = {};
   public unresolvedIntents: Set<Intent> = new Set();
-  public currentIntent?: string;
   
   // Private properties
   private customerInfo: CustomerInfo | null = null;
   private customerPreferences: CustomerPreferences;
   private followUpCount: Map<Intent, number> = new Map();
+  private hikingRecommendations: Set<HikingParams> = new Set();
 
   /**
    * Creates a new State instance
@@ -41,6 +31,7 @@ export class State {
     this.sessionId = sessionId;
     this.customerPreferences = new CustomerPreferences();
     this.followUpCount = new Map();
+    this.hikingRecommendations = new Set();
   }
 
   /**
@@ -289,6 +280,18 @@ export class State {
    */
   getLastNConversations(n: number): ConversationEntry[] {
     return this.conversation.slice(-n);
+  }
+
+  getHikingRecommendations(): HikingParams[] {
+    return Array.from(this.hikingRecommendations);
+  }
+
+  addHikingRecommendation(hike: HikingParams) {
+    this.hikingRecommendations.add(hike);
+  }
+
+  clearHikingRecommendations() {
+    this.hikingRecommendations.clear();
   }
 }
 

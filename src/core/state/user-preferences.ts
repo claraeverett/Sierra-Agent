@@ -28,7 +28,7 @@ export class CustomerPreferences {
      */
     setPreference(key: PreferenceKey, value: string) {
       this.preferences[key] = String(value);
-      console.log(`Updated preference ${key} to ${value}`);
+      //console.log(`Updated preference ${key} to ${value}`);
     }
 
     /**

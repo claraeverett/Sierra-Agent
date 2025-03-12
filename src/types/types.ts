@@ -15,13 +15,16 @@ export interface Product {
 /**
  * Supported intents for the agent
  */
-export type Intent = 
-  | 'OrderStatus' 
-  | 'EarlyRisers' 
-  | 'HikingRecommendation' 
-  | 'General' 
-  | 'HumanHelp'
-  | 'SearchFAQ';
+export enum Intent {
+  OrderStatus = 'OrderStatus',
+  EarlyRisers = 'EarlyRisers',
+  HikingRecommendation = 'HikingRecommendation',
+  General ='General',
+  HumanHelp = 'HumanHelp',
+  ProductInventory= 'ProductInventory',
+  ProductRecommendation = 'ProductRecommendation',
+  SearchFAQ = 'SearchFAQ',
+}
 
 /**
  * Structure for conversation entries
@@ -114,6 +117,8 @@ export interface HikingParams {
   difficulty?: "easy" | "moderate" | "hard";
   length?: number; // in miles
   playlist?: string;
+  weather?: string;
+  hikes?: HikingResponse;
 }
 
 /**
@@ -169,4 +174,13 @@ export interface HikingTrail {
   latitude: number;
   longitude: number;
   considerations: string;
+}
+
+/**
+ * Interface for product inventory parameters
+ */
+export interface ProductInventoryParams {
+  productSku: string;
+  productName: string;
+  query: string;
 }

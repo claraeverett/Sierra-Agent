@@ -36,15 +36,15 @@ export const COLLECT_HIKING_PREFERENCES_RESPONSE = {
    */
   ERROR: (location: string) => `I'm sorry, I encountered an issue while searching for hiking trails near ${location}. 
 
-This could be due to:
-• A temporary service disruption
-• Limited data for this specific location
-• An issue with how the location was specified
+    This could be due to:
+    • A temporary service disruption
+    • Limited data for this specific location
+    • An issue with how the location was specified
 
-Would you like to:
-1. Try a different location?
-2. Provide more details about the area you're interested in?
-3. Specify a different difficulty level or trail length?`,
+    Would you like to:
+    1. Try a different location?
+    2. Provide more details about the area you're interested in?
+    3. Specify a different difficulty level or trail length?`,
 
   /**
    * Response when no hiking trails were found for the location
@@ -61,5 +61,5 @@ Would you like to:
   SUCCESS: (details: { 
     hikes: string
   }) => `Here are hiking recommendations: ${details.hikes}
-    Present this information in a friendly, conversational way. Mention the trails, difficulty, and weather if available. Ask if they need anything else.`
+    Present this information in a friendly, conversational way. Mention the trails, difficulty, and weather if available. Tell them we have plenty of products to help them prepare for their hike.`,
 };

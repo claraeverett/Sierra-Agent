@@ -3,16 +3,19 @@ import { Tool, OrderStatusParams } from '@/types/types';
 import { State } from '@/core/state/state';
 import { ORDER_STATUS_RESPONSE } from '@/prompts/order-status-prompts';
 import { getOrderStatus, getProductDetails } from '@/data/store';
-
+import { Intent } from '@/types/types';
 
 export const orderStatusTool: Tool = {
   name: 'orderStatus',
   description: 'Check status of orders and order history',
-  execute: async (params: OrderStatusParams, state: State): Promise<ToolResponse> => {    
+  execute: async (params: OrderStatusParams, state: State): Promise<ToolResponse> => {  
+    
+    console.log("Order Status Tool", params, state);
+    console.log(" ---------------------------------------------------------------")
     // Extract parameters from request
-    state.addUnresolvedIntents('OrderStatus');
-    let orderId = params.orderId;
-    let email = params.email;
+    state.addUnresolvedIntents(Intent.OrderStatus);
+    let orderId = params.orderId?.toUpperCase().trim();
+    let email = params.email?.toLowerCase().trim();
 
     // Check state for previously stored order information
     // This handles cases where the user provided info in previous messages
@@ -75,7 +78,8 @@ export const orderStatusTool: Tool = {
       return product ? product.productName : sku;
     }) || [];
 
-    state.resolveIntent('OrderStatus');
+    
+    state.resolveIntent(Intent.OrderStatus);
     state.addPastOrderInfo({
       customerName: order.customerName,
       email: order.email,

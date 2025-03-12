@@ -1,4 +1,3 @@
-
 /**
  * Response templates for the human handoff tool
  * Contains various messages for different scenarios in the human handoff flow

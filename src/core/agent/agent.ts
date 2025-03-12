@@ -28,14 +28,17 @@ export class Agent {
    */
   async handleRequest(classification: IntentClassification, userMessage: string) {
     this.state.addConversationEntry('user', userMessage);
+    console.log(" ---------------------------------------------------------------")
     console.log("classification", classification);
-    
+    console.log(" ---------------------------------------------------------------")
     // Handle single or multiple intents
     const toolResponse = classification.intents.length > 1 
       ? await this.handleMultiIntent(classification)
       : await this.handleSingleIntent(classification.intents[0], classification.params[classification.intents[0]] || {});
-
+    console.log("Handle Request State", this.state);
     // Return general response if no prompt template is available
+
+    console.log("toolResponse Prompt Template", toolResponse.promptTemplate);
     if (!toolResponse.promptTemplate) {
       return GENERAL_RESPONSE;
     }
@@ -48,7 +51,7 @@ export class Agent {
     );
 
     console.log("Unresolved Intents", this.state.getUnresolvedIntents());
-    
+    console.log(" ---------------------------------------------------------------")
     return AIResponse || GENERAL_RESPONSE;
   }
 
@@ -63,6 +66,8 @@ export class Agent {
         this.handleSingleIntent(intent, classification.params[intent] || {})
       )
     );
+
+    console.log("Handle Multi Intent", responses);
     
     // Filter successful responses
     const successfulResponses = responses.filter(response => response.success);
@@ -73,10 +78,11 @@ export class Agent {
         return { ...acc, ...(response.details || {}) };
       }, {});
       
+      // We should return the first successful response, but we should also return the prompt template from all successful responses
       return {
         success: true,
         details: combinedDetails,
-        promptTemplate: successfulResponses[0].promptTemplate
+        promptTemplate: successfulResponses.map(response => response.promptTemplate).join("\n")
       };
     }
     

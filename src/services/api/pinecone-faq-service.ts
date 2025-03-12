@@ -1,6 +1,9 @@
 import * as fs from "fs-extra";
 import { PINECONE_CONSTANTS } from '@/config/constants';
-import { openai,pinecone } from '@/services/api/clients';
+import { pinecone } from '@/services/api/clients';
+import { modelResponseWithEmbedding } from '@/services/ai/openai-service';
+import { QueryResponse } from '@pinecone-database/pinecone';
+let index = pinecone.Index(PINECONE_CONSTANTS.FAQ_INDEX_NAME);
 
 /**
  * Uploads the Company FAQ to Pinecone
@@ -19,11 +22,11 @@ export const uploadFaq = async () => {
 
     // Ensure Pinecone index exists
     const indexList = await pinecone.listIndexes();
-    const indexExists = indexList.indexes?.some(idx => idx.name === PINECONE_CONSTANTS.INDEX_NAME) || false;
+    const indexExists = indexList.indexes?.some(idx => idx.name === PINECONE_CONSTANTS.FAQ_INDEX_NAME) || false;
     
     if (!indexExists) {
       await pinecone.createIndex({
-        name: PINECONE_CONSTANTS.INDEX_NAME,
+        name: PINECONE_CONSTANTS.FAQ_INDEX_NAME,
         dimension: PINECONE_CONSTANTS.VECTOR_DIMENSION,
         metric: "cosine",
         spec: { serverless: { cloud: "aws", region: "us-west-2" } }
@@ -31,7 +34,6 @@ export const uploadFaq = async () => {
       console.log("Created Pinecone index.");
     }
 
-    const index = pinecone.index(PINECONE_CONSTANTS.INDEX_NAME);
 
     // Loop through FAQ sections, create embeddings & upload to Pinecone
     for (let i = 0; i < faqSections.length; i++) {
@@ -39,10 +41,7 @@ export const uploadFaq = async () => {
       if (!text.trim()) continue;
 
       // Generate vector embedding
-      const embeddingResponse = await openai.embeddings.create({
-        model: PINECONE_CONSTANTS.EMBEDDING_MODEL,
-        input: text
-      });
+      const embeddingResponse = await modelResponseWithEmbedding(text, PINECONE_CONSTANTS.EMBEDDING_MODEL);
 
       const embedding = embeddingResponse.data[0].embedding;
       
@@ -68,3 +67,10 @@ export const uploadFaq = async () => {
   }
 };
 
+export const searchIndex = async (queryEmbedding: number[]): Promise<QueryResponse> => {
+  return await index.query({
+    vector: queryEmbedding,
+    topK: PINECONE_CONSTANTS.TOP_K, // Get top 3 matches
+    includeMetadata: true,
+  });
+}

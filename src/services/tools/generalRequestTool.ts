@@ -1,17 +1,30 @@
 import { Tool } from '@/types/types';
 import { ToolResponse } from '@/services/tools/toolExport';
 import { State } from '@/core/state/state';
+import { GENERAL_RESPONSE_PROMPT } from '@/prompts/system-prompts';
 
+/**
+ * General Request Tool
+ * 
+ * This module handles general inquiries that don't match specific intents.
+ * It serves as a fallback mechanism to ensure users always receive a helpful response.
+ * The tool has two main functions:
+ * 1. Remind users about unresolved intents from previous interactions
+ * 2. Provide guidance about available services when no specific intent is detected
+ */
 export const generalTool: Tool = {
   name: 'general',
   description: 'Handle general inquiries',
   execute: async (_params: any, state: State): Promise<ToolResponse> => {
-    // Check for unresolved intents
+    console.log("General Tool", _params, state);
+    console.log(" ---------------------------------------------------------------")
+    // Check for unresolved intents from previous interactions
     const unresolvedIntents = state.getUnresolvedIntents();
     
     if (unresolvedIntents.length > 0) {
-      // Create a message about unresolved intents
-      const unresolvedMessage = `I notice we haven't fully addressed your previous ${unresolvedIntents.length > 1 ? 'requests' : 'request'} about ${unresolvedIntents.join(', ')}. Would you like to continue with ${unresolvedIntents.length > 1 ? 'those' : 'that'} first?`;
+      // Create a message about unresolved intents to maintain conversation continuity
+      // This helps prevent user requests from being forgotten during the conversation
+      const unresolvedMessage = GENERAL_RESPONSE_PROMPT.UNRESOLVED_INTENTS_PROMPT(unresolvedIntents);
       
       return {
         success: true,
@@ -20,19 +33,10 @@ export const generalTool: Tool = {
     }
     
     // If no unresolved intents, suggest available services
-    const suggestionsMessage = `I'm not sure how to help with that specific request. Here are some things I can assist you with:
-
-• Check the status of your order
-• Get hiking trail recommendations
-• Learn about our Early Risers promotion
-• Search our FAQ for information
-• Connect you with a human customer service agent
-
-Could you please let me know which of these services you're interested in, or provide more details about your request?`;
-    
+    // This provides guidance to users who may not know what the system can do
     return {
       success: true,
-      promptTemplate: suggestionsMessage
+      promptTemplate: GENERAL_RESPONSE_PROMPT.GENERAL_HANDLER
     };
   }
 };
