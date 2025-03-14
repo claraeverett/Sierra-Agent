@@ -2,6 +2,17 @@ import { State } from '@/core/state/state';
 import { ToolResponse } from '@/services/tools/toolExport';
 
 /**
+ * Interface for resolve order issue parameters
+ */
+export interface ResolveOrderIssueParams {
+  orderId: string;
+  email: string;
+  resolution: string;
+  confidenceScore: number;
+  reason: string;
+}
+  
+/**
  * Product information structure
  */
 export interface Product {

@@ -17,6 +17,7 @@ export const orderStatusTool: Tool = {
     let orderId = params.orderId?.toUpperCase().trim();
     let email = params.email?.toLowerCase().trim();
 
+    
     // Check state for previously stored order information
     // This handles cases where the user provided info in previous messages
     if (!orderId || !email) {
@@ -33,6 +34,7 @@ export const orderStatusTool: Tool = {
     // Handle missing required parameters
     if (!state.hasCompleteOrderInfo()) {
       const response = 
+        state.getPastOrderInfo().length > 0 ? ORDER_STATUS_RESPONSE.FOLLOW_UP(state.getPastOrderInfo(),orderId) :
         !orderId && !email ? ORDER_STATUS_RESPONSE.NO_ID_NO_EMAIL() : 
         !orderId ? ORDER_STATUS_RESPONSE.NO_ID({email: email || ''}) : 
         !email ? ORDER_STATUS_RESPONSE.NO_EMAIL({orderId: orderId || ''}) : 

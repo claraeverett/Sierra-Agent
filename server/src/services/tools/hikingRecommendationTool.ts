@@ -110,21 +110,18 @@ const requestFollowUpInformation = (params: HikingParams, state: State) => {
     console.log("No location provided");
     state.incrementFollowUpCount(Intent.HikingRecommendation);
     return {
-      success: false,
-      promptTemplate: COLLECT_HIKING_PREFERENCES_RESPONSE.NO_LOCATION(),
+      promptTemplate:   COLLECT_HIKING_PREFERENCES_RESPONSE.NO_LOCATION(),
       missingParams: ["location"]
     };
   } else if (!params.difficulty) {
     state.incrementFollowUpCount(Intent.HikingRecommendation);
     return {
-      success: false,
       promptTemplate: COLLECT_HIKING_PREFERENCES_RESPONSE.NO_DIFFICULTY(),
       missingParams: ["difficulty"]
     };
   } else if (!params.length) {
     state.incrementFollowUpCount(Intent.HikingRecommendation);
     return {
-      success: false,
       promptTemplate: COLLECT_HIKING_PREFERENCES_RESPONSE.NO_LENGTH(),
       missingParams: ["length"]
     };
@@ -179,6 +176,8 @@ export const hikingRecommendationTool: Tool = {
     try {
     // Track this intent as unresolved until we successfully complete the recommendation
     state.addUnresolvedIntents(Intent.HikingRecommendation);
+    
+    updateHikingPreferences(params, state);
 
     // Extract parameters or use defaults
     const location = params.location;
@@ -187,7 +186,7 @@ export const hikingRecommendationTool: Tool = {
     const length = params.length || 5;
 
     // Update preferences for each parameter
-    updateHikingPreferences(params, state);
+    
 
     // Log the current state of preferences
     /*console.log("Current preferences:", {
@@ -201,10 +200,21 @@ export const hikingRecommendationTool: Tool = {
 
     if(state.getFollowUpCount(Intent.HikingRecommendation) == 0) {
         // First interaction - check if we need to request more information
-        requestFollowUpInformation(params, state);
+        const result = requestFollowUpInformation(params, state);
+        if (result && result.promptTemplate) {
+          return {
+            success: false,
+            details: {
+              missingParams: result.missingParams
+            },
+            promptTemplate: result.promptTemplate
+          };
+        }
     } 
 
+    console.log("state before setDefaultPreferences", state);
     setDefaultPreferences(state);
+    console.log("state after setDefaultPreferences", state);
 
     
     console.log("playlist", playlist);

@@ -1,0 +1,155 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: white;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Hide scrollbar when not hovering or scrolling */
+.chat-messages-container {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.chat-messages-container::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+.chat-messages-container:hover::-webkit-scrollbar-thumb,
+.chat-messages-container:active::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Custom styles for the chat interface */
+.chat-bubble {
+  backdrop-filter: blur(8px);
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  max-width: 75%;
+  font-size: 1.22rem;
+}
+
+/* Assistant message style */
+.chat-bubble.assistant {
+  background-color: rgba(24, 24, 24, 0.5);
+  color: rgba(255, 255, 255, 0.85);
+  align-self: flex-start;
+  margin-right: auto;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+  /* border: 1px solid rgba(255, 255, 255, 0.6); */
+}
+
+/* User message style */
+.chat-bubble.user {
+  background-color: rgba(255, 255, 255, 0.7);
+  color: rgba(40, 36, 36, .7);
+  align-self: flex-end;
+  margin-left: auto;
+  box-shadow: 0 0 15px rgba(14, 12, 12, 0.1);
+  /* border: 1px solid rgba(255, 255, 255, 0.6); */
+}
+
+.chat-input {
+  backdrop-filter: blur(8px);
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  padding: .75rem 3rem .75rem 1.5rem;
+  color: white;
+  width: 100%;
+  outline: none;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.chat-input:focus {
+  background-color: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+.chat-input.typing {
+  background-color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.chat-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.chat-input:disabled {
+  opacity: 0.7;
+}
+
+/* Send button styles */
+.send-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.send-button:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+  transform: scale(1.05);
+}
+
+.send-button:active {
+  background-color: rgba(255, 255, 255, 0.5);
+  transform: scale(0.95);
+}
+
+.send-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+  transform: none;
+  pointer-events: none;
+}
+
+/* Loading animation */
+@keyframes bounce-delay {
+  0%, 80%, 100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1.0);
+  }
+}
+
+.animate-bounce {
+  animation: bounce-delay 1.4s infinite ease-in-out both;
+} 

@@ -6,12 +6,13 @@ import { searchFaqTool } from '@/services/tools/searchFAQTool';
 import { humanHelpTool } from '@/services/tools/humanHandoffTool';
 import { productInventoryTool } from '@/services/tools/productInventory';
 import { productRecommendationTool } from '@/services/tools/productRecommendation';
-
+import { resolveOrderIssueTool } from '@/services/tools/resolveOrderIssue';
 /**
  * Export all tools
  */
 export const tools = {
   orderstatus: orderStatusTool,
+  resolveorderissue: resolveOrderIssueTool,
   earlyrisers: earlyRisersTool,
   general: generalTool,
   hikingrecommendation: hikingRecommendationTool,

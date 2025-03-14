@@ -1,3 +1,5 @@
+import { Order } from "../types/types";
+
 /**
  * Response templates for the order status tool
  * Contains various messages for different scenarios in the order status flow
@@ -36,6 +38,8 @@ export const ORDER_STATUS_RESPONSE = {
      * @param details Object containing the email
      */
     INVALID_EMAIL: (details: { email: string }) => `The email address (${details.email}) is not associated with any orders in the system. Ask the customer to confirm the email they used when placing the order.`,
+
+    FOLLOW_UP: (orderInfo: Order[], orderId: string | undefined) => `The customer has previously provided the order number(s) ${orderInfo.map(order => order.orderNumber).join(', ')}. Ask them if they would like to check the status of a different order, in which case they need to provide ${orderId ? 'an order number' : 'an email address'}. But ask them if they would like to check the status of one of the orders they have already provided.`,
   
     /**
      * Success response with order details
@@ -47,8 +51,8 @@ export const ORDER_STATUS_RESPONSE = {
       status: string, 
       items: string, 
       trackingNumber: string 
-    }) => `The customer's order (ID: ${details.orderNumber}) is ${details.status}. The order contains: ${details.items}.
+    }) => `Make sure to include the order number, tracking number, and status in your response. The customer's order (ID: ${details.orderNumber}) has status ${details.status}. The order contains: ${details.items}.
       ${details.trackingNumber ? `Tracking link: https://tools.usps.com/go/TrackConfirmAction?tLabels=${details.trackingNumber}` : ''}
-      Provide this information in a friendly, conversational way and ask if they need anything else.`
+      Provide this information in a friendly, conversational way and ask if they need anything else. If the status is error, ask if they would like to resolve the issue.`
   };
   

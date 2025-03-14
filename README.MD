@@ -13,6 +13,7 @@ An AI-powered customer service agent for Sierra Outfitters, an outdoor gear and 
 - **Conversation Management**: Maintains context throughout customer interactions
 - **Unresolved Intent Tracking**: Follows up on previously mentioned but unresolved requests
 - **Product Recommendations**: Suggests products based on customer preferences and history
+- **Web Interface**: Modern React-based UI for interacting with the agent
 
 ## 🛠️ Technical Architecture
 
@@ -25,47 +26,33 @@ The project is built with a modular architecture that separates concerns:
 - **Tool System**: Pluggable tools that handle specific customer intents
 - **Response Generation**: Context-aware response creation
 - **Agent System**: Coordinates tools and manages conversation flow
+- **Web UI**: React-based user interface with TailwindCSS
 
 ### Directory Structure
 
 ```
-src/
-├── config/         # Configuration constants and environment setup
-├── core/           # Core application components
-│   ├── agent/      # Agent implementation for handling requests
-│   └── state/      # State management for conversation and user data
-├── data/           # Static data and sample information
-├── prompts/        # System prompts for AI interactions
-│   ├── system-prompts.ts          # Main system prompts
-│   ├── hiking-prompts.ts          # Hiking-specific prompts
-│   ├── order-status-prompts.ts    # Order status prompts
-│   ├── early-riser-prompts.ts     # Early riser promotion prompts
-│   ├── human-handoff-prompts.ts   # Human handoff prompts
-│   ├── company-faq-prompts.ts     # FAQ prompts
-│   └── product-prompts.ts         # Product recommendation prompts
-├── services/       # Service implementations
-│   ├── ai/         # AI service integrations (OpenAI)
-│   │   ├── intent-classifier.ts   # Intent classification
-│   │   ├── openai-service.ts      # OpenAI API integration
-│   │   └── response-generator.ts  # Response generation
-│   ├── api/        # External API integrations
-│   │   ├── clients.ts             # API client initialization
-│   │   ├── endpoints.ts           # API endpoint definitions
-│   │   └── external-api-service.ts # External API service
-│   └── tools/      # Intent-specific tool implementations
-│       ├── toolExport.ts          # Tool registry and exports
-│       ├── orderStatusTool.ts     # Order status tool
-│       ├── hikingRecommendationTool.ts # Hiking recommendation tool
-│       ├── earlyRiserTool.ts      # Early riser promotion tool
-│       ├── searchFAQTool.ts       # FAQ search tool
-│       ├── humanHandoffTool.ts    # Human handoff tool
-│       ├── generalRequestTool.ts  # General inquiry tool
-│       ├── productInventory.ts    # Product inventory tool
-│       └── productRecommendation.ts # Product recommendation tool
-├── types/          # TypeScript type definitions
-└── utils/          # Utility functions
-    ├── formatting.ts              # Data formatting utilities
-    └── utils.ts                   # General utilities
+/
+├── server.js                # Express server for API endpoints
+├── setup.js                 # Setup script for development
+├── src/                     # Backend source code
+│   ├── config/              # Configuration constants and environment setup
+│   ├── core/                # Core application components
+│   │   ├── agent/           # Agent implementation for handling requests
+│   │   └── state/           # State management for conversation and user data
+│   ├── data/                # Static data and sample information
+│   ├── prompts/             # System prompts for AI interactions
+│   ├── services/            # Service implementations
+│   │   ├── ai/              # AI service integrations (OpenAI)
+│   │   ├── api/             # External API integrations
+│   │   └── tools/           # Intent-specific tool implementations
+│   ├── types/               # TypeScript type definitions
+│   └── utils/               # Utility functions
+└── sierra-ui/               # Frontend React application
+    ├── public/              # Static assets
+    └── src/                 # Frontend source code
+        ├── components/      # React components
+        ├── services/        # Frontend services
+        └── App.tsx          # Main application component
 ```
 
 ## 🚀 Getting Started
@@ -99,20 +86,67 @@ src/
    MAILGUN_DOMAIN=your_mailgun_domain
    PINECONE_API_KEY=your_pinecone_api_key
    OPEN_WEATHER_API_KEY=your_openweather_api_key
+   PORT=3001
    ```
 
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
+### Running the Agent
 
-## 💻 Usage
+#### Command Line Interface (CLI)
 
-The agent can be interacted with through a command-line interface for development purposes:
+To run the agent in CLI mode for testing:
 
 ```bash
 npm start
 ```
+
+This will start the agent in interactive mode, allowing you to chat with it directly in your terminal. Type `exit` to quit the session.
+
+You can also use the test script for a more user-friendly CLI experience:
+
+```bash
+node test-agent.js
+```
+
+#### Web Interface
+
+To run the agent with the web interface:
+
+1. Build the UI first:
+   ```bash
+   npm run build:ui
+   ```
+
+2. Start the server:
+   ```bash
+   npm run start:server
+   ```
+
+   The application will be available at http://localhost:3001
+
+### Development
+
+For development, you can run the backend and frontend separately:
+
+1. Start the backend server in development mode:
+   ```bash
+   npm run dev
+   ```
+
+2. Start the frontend development server:
+   ```bash
+   npm run dev:ui
+   ```
+
+   The frontend will be available at http://localhost:3000
+
+Alternatively, you can run both simultaneously:
+```bash
+npm run dev:full
+```
+
+## 💻 Usage
+
+The agent can be interacted with through the web interface or through a command-line interface for development purposes.
 
 Example interactions:
 
@@ -145,9 +179,14 @@ Each customer intent is handled by a specialized tool:
 - `productRecommendationTool`: Provides product recommendations
 - `generalTool`: Handles general inquiries and fallbacks
 
-### Response Generation
+### Web Interface
 
-The agent generates natural, conversational responses using carefully crafted prompts and OpenAI's language models.
+The web interface is built with React and TailwindCSS, providing a modern and responsive user experience. It includes:
+
+- Chat interface with message history
+- Real-time responses
+- Session persistence
+- Parameter display for transparency
 
 ## 🔧 Development
 
