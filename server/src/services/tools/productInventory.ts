@@ -13,9 +13,8 @@ import { Intent } from '@/types/types';
  */
 
 function getInventoryBySKU(sku: string): Product | null {
-    console.log("Getting inventory by SKU", sku);
     const product = productsMap[sku.toUpperCase()];
-    console.log("Product", product);
+    
     if (product) {
       return product;
     }
@@ -49,20 +48,15 @@ export const productInventoryTool: Tool = {
   name: 'productInventory',
   description: 'Check inventory of a specific product',
   execute: async (params: ProductInventoryParams, state: State): Promise<ToolResponse> => {    
-    console.log("Product Inventory Tool", params, state);
-    console.log(" ---------------------------------------------------------------")
-    
+
     // Extract parameters from request
     state.addUnresolvedIntents(Intent.ProductInventory);
-    console.log("Params", params);
     let sku = params.productSku;
-    console.log("SKU", sku);
     let productName = params.productName;
     let productInfo: Product | null = null;
     let closestMatches: Product[] = [];
 
     if (sku) {
-        console.log("SKU", sku);
         productInfo = getInventoryBySKU(sku);
         if (productInfo) {
             state.resolveIntent(Intent.ProductInventory);

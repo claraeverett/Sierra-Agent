@@ -17,10 +17,7 @@ export const earlyRisersTool: Tool = {
   name: 'earlyRisers',
   description: 'Handle Early Risers promotion',
   execute: async (params: EarlyRisersParams, state: State): Promise<ToolResponse> => {
-    // Get the current time to check if we're in the valid promotion window
-    console.log("Early Risers Tool", params, state);
-    console.log(" ---------------------------------------------------------------")
-    
+    // Get the current time to check if we're in the valid promotion window  
     const timeNow = getTime();
     const hour = new Date(timeNow).getHours();
 

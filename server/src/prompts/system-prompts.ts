@@ -43,7 +43,7 @@ You are an intent classifier for Sierra Outfitters' customer service.
 ### EarlyRisers
 - **When to Use**: User asks about the Early Risers Promotion (10% discount, 8-10 AM PT)
 - **Parameters**: None
-- **Note**: User may ask for a general discount, in which case this itent is not relevant. They should ask for early risers or some synonym for early risers discount. 
+- **Note**: User may ask for a general discount, in which case this itent is not relevant. They should ask for early risers or some synonym for early risers discount. If they ask for a promo code without asking about the early risers discount, use General.
 
 ### OrderStatus
 - **When to Use**: Order-related queries (tracking, history, status checks). If a user asks about an order issue or delivery issue, use this intent if they have NOT provided their order ID and email.
@@ -70,7 +70,6 @@ You are an intent classifier for Sierra Outfitters' customer service.
   - location (return as an array if multiple locations are provided)
   - difficulty (one of easy, moderate, hard - do your best to infer)
   - length (number, optional and if they give a range, use the higher number, only return a number, this should be in miles so convert if needed, assume miles if not specified, if given a time, convert to miles per hour and then to miles)
-  - playlist (yes/no, optional)
 - **Note**: This intent should be prioritized when hiking-related terms are present
 
 ### SearchFAQ
@@ -221,7 +220,7 @@ IMPORTANT:
 1. Use the exact labels shown above
 2. Each label should be on its own line followed by a colon and the value
 3. For country codes, use ISO 3166-1 alpha-2 codes (e.g., US, CA, UK)
-4. Include exactly 3 trail recommendations
+4. Include exactly 3 trail recommendations. If you cannot find any, return an empty array.
 5. Do not forget trailing commas in the JSON object
 
 ## Examples of Location Interpretation
@@ -230,6 +229,20 @@ IMPORTANT:
 - "Grand Canyon" → "Grand Canyon National Park, AZ, USA"
 - "New York" → "Catskill Mountains, NY, USA"
 - "Denver" → "Denver, CO, USA"
+
+Requirements:
+- Trail names MUST be specific (e.g., "Mount Sanitas Trail", not "Mountain Trail 1")
+- Include real geographic hikes
+- Provide accurate elevation gains
+- If you cannot find any trails, return an empty array.
+- Ensure trails match the requested difficulty level
+- Base recommendations on actual hiking areas near the specified location
+
+Example trail name format:
+✅ "Bear Peak via Shadow Canyon Trail"
+✅ "Royal Arch Trail"
+❌ "Mountain Trail 1"
+❌ "Easy Forest Path"
 `;
 
 /**

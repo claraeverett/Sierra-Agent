@@ -9,9 +9,6 @@ export const orderStatusTool: Tool = {
   name: 'orderStatus',
   description: 'Check status of orders and order history',
   execute: async (params: OrderStatusParams, state: State): Promise<ToolResponse> => {  
-    
-    console.log("Order Status Tool", params, state);
-    console.log(" ---------------------------------------------------------------")
     // Extract parameters from request
     state.addUnresolvedIntents(Intent.OrderStatus);
     let orderId = params.orderId?.toUpperCase().trim();
@@ -81,7 +78,7 @@ export const orderStatusTool: Tool = {
     }) || [];
 
     
-    state.resolveIntent(Intent.OrderStatus);
+    
     state.addPastOrderInfo({
       customerName: order.customerName,
       email: order.email,
@@ -92,6 +89,7 @@ export const orderStatusTool: Tool = {
     });
 
     state.clearOrderInfo();
+    state.resolveIntent(Intent.OrderStatus);
 
     // Return successful response with order details
     return {

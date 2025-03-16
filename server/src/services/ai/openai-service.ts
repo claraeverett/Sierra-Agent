@@ -77,8 +77,6 @@ async function modelResponseWithEmbedding(
  * @returns JSON formatted classification response
  */
 async function intentClassifier(prompt: string, message: string, state: State) {
-  console.log("IntentClassifier conversationHistory : ", state.getConversationHistory());
-
   return await openai.chat.completions.create({
     model: AI_CONSTANTS.DEFAULT_MODEL,
     messages: [

@@ -42,7 +42,6 @@
     {
     "CustomerName": "Diana Evans",
     "Email": "diana.evans@example.com",
-    
     "OrderNumber": "#W006",
     "ProductsOrdered": ["SOGK009", "SOJT005"],
     "Status": "in-transit",

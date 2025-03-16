@@ -32,6 +32,7 @@ export enum Intent {
   HikingRecommendation = 'HikingRecommendation',
   General ='General',
   HumanHelp = 'HumanHelp',
+  ResolveOrderIssue = 'ResolveOrderIssue',
   ProductInventory= 'ProductInventory',
   ProductRecommendation = 'ProductRecommendation',
   SearchFAQ = 'SearchFAQ',
@@ -94,7 +95,6 @@ export interface PromoCode {
 export enum PreferenceKey {
   location = 'hikingLocations',
   length = 'hikingLength',
-  playlist = 'hikingPlaylist',
   difficulty = 'hikingDifficulty',
 }
 
@@ -127,7 +127,6 @@ export interface HikingParams {
   location: string;
   difficulty?: "easy" | "moderate" | "hard";
   length?: number; // in miles
-  playlist?: string;
   weather?: string;
   hikes?: HikingResponse;
 }

@@ -64,12 +64,8 @@ export const apiService = {
    */
   getCoordinates: async (zipcode: string, countrycode: string) => {
     try {
-      console.log("zipcode", zipcode);
-      console.log("countrycode", countrycode);
-      console.log("ENDPOINTS.COORDINATES(zipcode, countrycode)", ENDPOINTS.COORDINATES(zipcode, countrycode));
       const response = await axios.get(ENDPOINTS.COORDINATES(zipcode, countrycode));
       
-      console.log(response.data)
       return response.data;
     } catch (error) {
       console.error("Error fetching coordinates:", error);
@@ -90,11 +86,9 @@ export const apiService = {
   getWeather: async (lat: string, lon: string) => {
     try {
       const response = await axios.get(ENDPOINTS.WEATHER(lat, lon));
-      console.log("response.data", response.data);
       return response.data;
     } catch (error) {
       console.error("Error fetching weather data:", error);
-      console.log("error", error);
       return null;
     }
   },
@@ -110,11 +104,7 @@ export const apiService = {
    * @returns The Mailgun API response or null if sending fails
    */
   sendEmail: async (body: string, customerId: string) => {
-    try {
-      console.log("Attempting to send email with body:", body);
-      console.log("Using Mailgun API key:", process.env.MAILGUN_API_KEY ? "API key exists" : "API key missing");
-      console.log("Using Mailgun domain:", process.env.MAILGUN_DOMAIN);
-      
+    try {   
       // Initialize Mailgun client
       const mailgun = new Mailgun(FormData);
       const mg = mailgun.client({
@@ -133,7 +123,6 @@ export const apiService = {
         }
       );
 
-      console.log("Email sent successfully:", result);
       return result;
     } catch (error) {
       console.error("Error sending email:", error);

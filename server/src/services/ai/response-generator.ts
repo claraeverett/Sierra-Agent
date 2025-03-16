@@ -36,8 +36,6 @@ export async function generateResponse(
       content: formattedPrompt 
     });
 
-   // console.log("GenerateResponse conversationHistory : ", conversationHistory);
-
     // Generate AI response
     const response = await modelResponse(
       conversationHistory, 

@@ -54,6 +54,7 @@ function Chat() {
   const [isTyping, setIsTyping] = useState(false);
   const [sessionId, setSessionId] = useState<string | undefined>(undefined);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Load sessionId from localStorage on component mount
   useEffect(() => {
@@ -61,6 +62,9 @@ function Chat() {
     if (storedSessionId) {
       setSessionId(storedSessionId);
     }
+    
+    // Scroll to bottom when component mounts
+    scrollToBottom();
   }, []);
 
   // Auto-scroll to bottom when messages change or loading state changes
@@ -70,12 +74,26 @@ function Chat() {
 
   // Function to scroll to the bottom of the chat
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // Use setTimeout to ensure the scroll happens after any pending renders
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
+  // Function to focus the input field
+  const focusInput = () => {
+    inputRef.current?.focus();
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
     setIsTyping(e.target.value.length > 0);
+  };
+
+  // Add a new handler for input focus
+  const handleInputFocus = () => {
+    // Scroll to the bottom when input is focused
+    scrollToBottom();
   };
 
   const handleSendMessage = async (e?: React.FormEvent) => {
@@ -138,8 +156,8 @@ function Chat() {
   };
 
   return (
-    <div className="flex flex-col h-[600px]">
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 chat-messages-container">
+    <div className="flex flex-col h-[800px] min-h-0 chat-container" onClick={focusInput}>
+      <div className="flex-1 overflow-y-auto p-6 space-y-6 chat-messages-container min-h-0">
         {messages.map((message) => (
           <div
             key={message.id}
@@ -159,12 +177,14 @@ function Chat() {
         {isLoading && <LoadingAnimation />}
         <div ref={messagesEndRef} />
       </div>
-      <div className="p-4">
+      <div className="p-5 flex-shrink-0">
         <form onSubmit={handleSendMessage} className="flex items-center relative">
           <input
+            ref={inputRef}
             type="text"
             value={input}
             onChange={handleInputChange}
+            onFocus={handleInputFocus}
             placeholder="Type Your Message..."
             className={`chat-input pr-12 ${isTyping ? 'typing' : ''}`}
             disabled={isLoading}

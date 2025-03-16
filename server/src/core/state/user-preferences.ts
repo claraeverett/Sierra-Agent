@@ -4,12 +4,11 @@ import { PreferenceKey } from '@/types/types';
  * Class for managing customer preferences
  * Stores and retrieves user preferences for various features
  */
-export class CustomerPreferences {
+export class HikingPreferences {
     private preferences: Record<string, string> = {
       hikingLocations: '',
       hikingDifficulty: '',
       hikingLength: '',
-      hikingPlaylist: '',
     };
   
     /**
@@ -28,7 +27,6 @@ export class CustomerPreferences {
      */
     setPreference(key: PreferenceKey, value: string) {
       this.preferences[key] = String(value);
-      //console.log(`Updated preference ${key} to ${value}`);
     }
 
     /**
@@ -47,7 +45,6 @@ export class CustomerPreferences {
             hikingLocations: '',
             hikingDifficulty: '',
             hikingLength: '',
-            hikingPlaylist: '',
         };
     }
   }

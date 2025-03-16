@@ -16,8 +16,6 @@ export const generalTool: Tool = {
   name: 'general',
   description: 'Handle general inquiries',
   execute: async (_params: any, state: State): Promise<ToolResponse> => {
-    console.log("General Tool", _params, state);
-    console.log(" ---------------------------------------------------------------")
     // Check for unresolved intents from previous interactions
     const unresolvedIntents = state.getUnresolvedIntents();
     

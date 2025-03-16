@@ -28,9 +28,7 @@ export const humanHelpTool: Tool = {
     execute: async (params: HumanHelpParams, state: State): Promise<ToolResponse> => {  
         // Track this intent as unresolved until we successfully send the email
         state.addUnresolvedIntents(Intent.HumanHelp);
-        
-        console.log('Executing humanHelpTool with params:', params);
-        
+                
         try {
             // Generate a customer ID if not already present in state
             // This ensures each customer has a unique identifier for tracking
@@ -55,29 +53,14 @@ export const humanHelpTool: Tool = {
                 AI_CONSTANTS.SEND_EMAIL_MAX_TOKENS
             );
             
-            // Note: The previous implementation used direct OpenAI API calls
-            // This was replaced with the modelResponse function for consistency
-            /*
-            const response = await openai.chat.completions.create({
-                model: AI_CONSTANTS.DEFAULT_MODEL,
-                messages: [
-                    { role: "system", content: systemPrompt },  // Use system role for better instruction following
-                    ...conversationHistory  // Include conversation history
-                ],
-                temperature: 0.1,  // Very low temperature for deterministic output
-                max_tokens: 800   // Increased token limit to ensure complete email
-            });*/
-            
             // Extract the email body from the model response
             const emailBody = response.choices[0].message.content || '';
-            console.log('Generated email body:', emailBody);
             
             // Send the email to the support team with the customer ID for tracking
             const emailResult = await apiService.sendEmail(emailBody, state.userId);
             
             if (emailResult) {
                 // Email sent successfully - inform the customer and resolve the intent
-                console.log('Email sent successfully:', emailResult);
                 state.resolveIntent(Intent.HumanHelp);
                 return {
                     success: true,

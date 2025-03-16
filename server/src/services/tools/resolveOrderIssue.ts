@@ -1,5 +1,5 @@
 import { ToolResponse } from '@/services/tools/toolExport';
-import { Tool, ResolveOrderIssueParams} from '@/types/types';
+import { Tool, ResolveOrderIssueParams, Intent} from '@/types/types';
 import { State } from '@/core/state/state';
 import { RESOLVE_ORDER_ISSUE_PROMPT } from '@/prompts/resolve-order';
 
@@ -14,7 +14,7 @@ export const resolveOrderIssueTool: Tool = {
   name: 'resolveOrderIssue',
   description: 'Handle order issue resolution',
   execute: async (params: ResolveOrderIssueParams, state: State): Promise<ToolResponse> => {
-    console.log(state)
+    state.addUnresolvedIntents(Intent.ResolveOrderIssue);
     
     const { orderId, email, resolution, confidenceScore, reason } = params;
     // If the user has not looked up an order ID, and the resolution is a refund, replacement, or repair, return an error and prompt the user to look up an order ID.
@@ -33,6 +33,7 @@ export const resolveOrderIssueTool: Tool = {
     }
 
     if (params.resolution == "other") {
+      state.resolveIntent(Intent.ResolveOrderIssue);
       return {
         success: true,
         details: {
@@ -46,6 +47,7 @@ export const resolveOrderIssueTool: Tool = {
       };
     }
 
+    state.resolveIntent(Intent.ResolveOrderIssue);
     return {
       success: true,
       details: {

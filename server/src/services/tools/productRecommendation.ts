@@ -7,7 +7,6 @@ import { PRODUCT_SIMILARITY_PROMPT } from '@/prompts/system-prompts';
 import { modelResponse, modelResponseWithEmbedding } from '@/services/ai/openai-service';
 import { searchProduct } from '@/services/api/pinecone-product-service';
 import { PINECONE_CONSTANTS } from '@/config/constants';
-import { getUniqueTags } from '@/data/store';
 /**
  * Product Recommendation Tool
  * 
@@ -27,17 +26,10 @@ import { getUniqueTags } from '@/data/store';
 async function generateSearchQuery(query:string): Promise<string> {
   // Use the product similarity prompt to generate a more effective search query
   // This incorporates user preferences and past behavior from the state
-  console.log("User Query", query);
+
   const prompt = PRODUCT_SIMILARITY_PROMPT(query);
 
-  console.log("Unique Tags", getUniqueTags());
-
-  //console.log("State", state);
-  
-  console.log("Prompt", prompt);
-
   const response = await modelResponse([],prompt, false);
-  console.log("Product Recommendation Prompt", response);
 
   return response.choices[0].message?.content || "";
 }
@@ -65,20 +57,17 @@ async function getEmbedding(text: string): Promise<number[]> {
  * @param topK - The number of results to return (defaults to 3)
  * @returns An array of matching products with relevance scores
  */
-async function searchHybrid(userState: State, params: ProductInventoryParams, topK: number = 3) {
+async function searchHybrid(params: ProductInventoryParams, topK: number = 3) {
   let userQuery = params.query;
-  console.log("User State", userState.getOrderInfo);
-  console.log("User Query", userQuery);
+
   // Step 1: Generate a structured query that incorporates user context
   const searchQuery = await generateSearchQuery(userQuery);
-  console.log("🔍 Generated Search Query:", searchQuery);
 
   // Step 2: Convert search query to embedding vector for semantic matching
   const queryVector = await getEmbedding(searchQuery);
 
   // Step 3: Run hybrid search in Pinecone vector database
   const result = await searchProduct(topK, queryVector);
-  console.log("🔍 Search Result:", result);
 
   // Step 4: Format the results for display
   return result.matches.map((match) => ({
@@ -105,10 +94,9 @@ export const productRecommendationTool: Tool = {
   execute: async (params: ProductInventoryParams, state: State): Promise<ToolResponse> => {    
     // Track this intent as unresolved until we successfully complete the recommendation
     state.addUnresolvedIntents(Intent.ProductRecommendation);
-    console.log("🔍 Product Recommendation Tool");
     
     // Perform the hybrid search to find relevant products
-    const result = await searchHybrid(state, params, PINECONE_CONSTANTS.TOP_K);
+    const result = await searchHybrid(params, PINECONE_CONSTANTS.TOP_K);
 
     const formattedResults = result.map(item => ({
       productName: String(item.ProductName),
@@ -119,7 +107,6 @@ export const productRecommendationTool: Tool = {
     }));
 
     if(result.length > 0) {
-      console.log("Result", result);
       // Mark the intent as resolved since we found products to recommend
       state.resolveIntent(Intent.ProductRecommendation);
       
@@ -129,12 +116,6 @@ export const productRecommendationTool: Tool = {
         promptTemplate: PRODUCT_RECOMMENDATION_PROMPT.PRODUCTS_FOUND(formattedResults)
       };
     }
-    
-    // Log debugging information if no products were found
-    console.log("Result", result);
-    console.log("Params", params);
-    //console.log("State", state);
-    console.log("Product Inventory Prompt", PRODUCT_RECOMMENDATION_PROMPT.ERROR);
 
     // Return an error response if no products were found
     return {

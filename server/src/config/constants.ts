@@ -16,7 +16,6 @@ export const HIKING_RECOMMENDATION_PREFERENCES = {
     DEFAULT_LOCATION: "Denver, CO",
     DEFAULT_DIFFICULTY: "moderate",
     DEFAULT_LENGTH: "5",
-    DEFAULT_PLAYLIST: "no",
 }
 
 /**

@@ -1,5 +1,5 @@
 import { Order, ConversationEntry, PromoCode, PreferenceKey, Intent, CustomerInfo, HikingParams } from '@/types/types';
-import { CustomerPreferences } from '@/core/state/user-preferences';
+import { HikingPreferences } from '@/core/state/user-preferences';
 
 /**
  * Main state management class for the Sierra Outfitters agent
@@ -17,7 +17,7 @@ export class State {
   
   // Private properties
   private customerInfo: CustomerInfo | null = null;
-  private customerPreferences: CustomerPreferences;
+  private hikingPreferences: HikingPreferences;
   private followUpCount: Map<Intent, number> = new Map();
   private hikingRecommendations: Set<HikingParams> = new Set();
 
@@ -29,7 +29,7 @@ export class State {
   constructor(userId: string, sessionId: string) {
     this.userId = userId;
     this.sessionId = sessionId;
-    this.customerPreferences = new CustomerPreferences();
+    this.hikingPreferences = new HikingPreferences();
     this.followUpCount = new Map();
     this.hikingRecommendations = new Set();
   }
@@ -82,7 +82,7 @@ export class State {
    * @returns The preference value
    */
   getPreference(key: PreferenceKey): string {
-    return this.customerPreferences.getPreference(key);
+    return this.hikingPreferences.getPreference(key);
   }
 
   /**
@@ -91,7 +91,7 @@ export class State {
    * @param value The preference value
    */
   setPreference(key: PreferenceKey, value: string) {
-    this.customerPreferences.setPreference(key, value);
+    this.hikingPreferences.setPreference(key, value);
   }
 
   /**
@@ -99,7 +99,7 @@ export class State {
    * @param key The preference key to clear
    */
   clearPreference(key: PreferenceKey) {
-    this.customerPreferences.clearPreference(key);
+    this.hikingPreferences.clearPreference(key);
   }
 
   /**

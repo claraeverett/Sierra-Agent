@@ -18,12 +18,6 @@ export const COLLECT_HIKING_PREFERENCES_RESPONSE = {
   NO_DIFFICULTY: () => `The customer has not provided the difficulty. Ask them to provide a difficulty level if they have one.`,
 
   /**
-   * Response when the customer hasn't indicated playlist preference
-   * Asks if they would like a playlist with their recommendations
-   */
-  PLAYLIST_CLARIFICATION: () => `The customer has not provided a preference for a playlist. Ask them if they would like a playlist with their hiking recommendations.`,
-  
-  /**
    * Response when the customer hasn't specified a trail length
    * Prompts for this optional parameter
    */
@@ -60,6 +54,6 @@ export const COLLECT_HIKING_PREFERENCES_RESPONSE = {
    */
   SUCCESS: (details: { 
     hikes: string
-  }) => `Here are hiking recommendations: ${details.hikes}
+  }) => `Here are hiking recommendations: ${details.hikes}. If the hiking trails include formatting such as **, please remove it.
     Present this information in a friendly, conversational way. Mention the trails, difficulty, and weather if available. Tell them we have plenty of products to help them prepare for their hike.`,
 };

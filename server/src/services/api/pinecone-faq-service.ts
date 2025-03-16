@@ -31,7 +31,6 @@ export const uploadFaq = async () => {
         metric: "cosine",
         spec: { serverless: { cloud: "aws", region: "us-west-2" } }
       });
-      console.log("Created Pinecone index.");
     }
 
 
@@ -58,10 +57,8 @@ export const uploadFaq = async () => {
         metadata: { text } 
       }]);
       
-      console.log(`Uploaded section ${i + 1} to Pinecone`);
     }
 
-    console.log("All FAQ sections uploaded!");
   } catch (error) {
     console.error("Error uploading FAQ:", error);
   }

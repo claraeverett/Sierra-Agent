@@ -12,7 +12,7 @@ import { Intent } from '@/types/types';
  * Hiking Recommendation Tool
  * 
  * This module provides functionality to recommend hiking trails based on user preferences
- * such as location, difficulty, length, and playlist preferences. It also integrates
+ * such as location, difficulty, and length preferences. It also integrates
  * weather data to provide a comprehensive hiking recommendation.
  */
 
@@ -26,7 +26,6 @@ const setDefaultPreferences = (state: State) => {
   state.setPreference(PreferenceKey.location, HIKING_RECOMMENDATION_PREFERENCES.DEFAULT_LOCATION);
   state.setPreference(PreferenceKey.difficulty, HIKING_RECOMMENDATION_PREFERENCES.DEFAULT_DIFFICULTY);
   state.setPreference(PreferenceKey.length, HIKING_RECOMMENDATION_PREFERENCES.DEFAULT_LENGTH);
-  state.setPreference(PreferenceKey.playlist, HIKING_RECOMMENDATION_PREFERENCES.DEFAULT_PLAYLIST);
 }
 
 /**
@@ -42,7 +41,6 @@ const updateHikingPreferences = (params: HikingParams, state: State) => {
     'location': PreferenceKey.location,
     'difficulty': PreferenceKey.difficulty,
     'length': PreferenceKey.length,
-    'playlist': PreferenceKey.playlist
   };
 
   // Update each preference if a valid value is provided
@@ -69,8 +67,7 @@ async function getWeather(hikes: HikingResponse) {
       // First get coordinates from zipcode
       const coordinates = await apiService.getCoordinates(hikes.region.zipcode, hikes.region.country_code);
       if (coordinates) {
-        console.log("We have coordinates");
-        // Then get weather data from coordinates
+        // Get weather data from coordinates
         const weather = await apiService.getWeather(coordinates.lat, coordinates.lon);
         
         // Format weather data if available
@@ -107,7 +104,6 @@ const validResponse = (data: HikingResponse) => {
  */
 const requestFollowUpInformation = (params: HikingParams, state: State) => {
   if (!params.location) {
-    console.log("No location provided");
     state.incrementFollowUpCount(Intent.HikingRecommendation);
     return {
       promptTemplate:   COLLECT_HIKING_PREFERENCES_RESPONSE.NO_LOCATION(),
@@ -126,6 +122,8 @@ const requestFollowUpInformation = (params: HikingParams, state: State) => {
       missingParams: ["length"]
     };
   }
+
+  return null;
 }
 
 /**
@@ -142,10 +140,7 @@ const parseHikingResponse = (response: string) => {
     
         // Parse JSON
         const data: HikingResponse = JSON.parse(cleanResponse);
-        console.log("data", data);
-        console.log("data.region", data.region);
-        console.log("data.trails", data.trails);
-    
+
         // Validate required fields
         if (!validResponse(data)) {
           console.error("Invalid response structure:", data);
@@ -171,8 +166,6 @@ export const hikingRecommendationTool: Tool = {
   name: "hiking",
   description: "Get hiking trail recommendations based on location and preferences",
   execute: async (params: HikingParams, state: State): Promise<ToolResponse> => {      
-    console.log("Hiking Recommendation Tool", params, state);
-    console.log(" ---------------------------------------------------------------")
     try {
     // Track this intent as unresolved until we successfully complete the recommendation
     state.addUnresolvedIntents(Intent.HikingRecommendation);
@@ -182,21 +175,8 @@ export const hikingRecommendationTool: Tool = {
     // Extract parameters or use defaults
     const location = params.location;
     const difficulty = params.difficulty || "moderate";
-    const playlist = params.playlist;
     const length = params.length || 5;
 
-    // Update preferences for each parameter
-    
-
-    // Log the current state of preferences
-    /*console.log("Current preferences:", {
-      location: state.getPreference(PreferenceKey.location),
-      difficulty: state.getPreference(PreferenceKey.difficulty),
-      length: state.getPreference(PreferenceKey.length),
-      playlist: state.getPreference(PreferenceKey.playlist)
-    });*/
-
-    console.log("state", state);
 
     if(state.getFollowUpCount(Intent.HikingRecommendation) == 0) {
         // First interaction - check if we need to request more information
@@ -212,12 +192,7 @@ export const hikingRecommendationTool: Tool = {
         }
     } 
 
-    console.log("state before setDefaultPreferences", state);
     setDefaultPreferences(state);
-    console.log("state after setDefaultPreferences", state);
-
-    
-    console.log("playlist", playlist);
 
     // Fetch Hiking Trails from GPT 
     const response = await modelResponse(
@@ -229,10 +204,6 @@ export const hikingRecommendationTool: Tool = {
     // Parse the response into a structured format
     const hikes = parseHikingResponse(response.choices[0].message.content || '');
     
-    // Check if location is provided
-    console.log("state", state);
-    console.log("hikes", hikes);
-    
     // If no hikes were found or parsing failed
     if (!hikes) {
       return {
@@ -240,8 +211,6 @@ export const hikingRecommendationTool: Tool = {
         promptTemplate: COLLECT_HIKING_PREFERENCES_RESPONSE.NO_HIKES_FOUND(location)
       };
     }
-    
-    console.log("hikes.region", hikes.region);
     
     // Create a formatted description of each trail
     const trailsDescription = hikes.trails.map((trail, index) => {
@@ -262,7 +231,6 @@ ${trail.considerations ? `• Note: ${trail.considerations}` : ""}`;
       location: location,
       difficulty: difficulty,
       length: length,
-      playlist: playlist,
       weather: weatherInfo,
       hikes: hikes
     });
