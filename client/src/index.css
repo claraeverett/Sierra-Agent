@@ -75,13 +75,14 @@ code {
   backdrop-filter: blur(8px);
   border-radius: 1.2rem;
   padding: 1rem 1.25rem;
-  max-width: 80%;
+  max-width: 100%; /* Changed to 100% since parent container now handles width */
   font-size: 1.22rem;
   margin-bottom: 0.75rem;
   line-height: 1.5;
   word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
+  width: 100%; /* Ensure the bubble takes full width of its container */
 }
 
 /* Assistant message style */
@@ -90,6 +91,7 @@ code {
   color: rgba(255, 255, 255, 0.9);
   align-self: flex-start;
   margin-right: auto;
+  margin-left: 0; /* Align to the left edge */
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
   border-bottom-left-radius: 0.3rem;
   /* border: 1px solid rgba(255, 255, 255, 0.6); */
@@ -101,6 +103,7 @@ code {
   color: rgba(40, 36, 36, .8);
   align-self: flex-end;
   margin-left: auto;
+  margin-right: 0; /* Align to the right edge */
   box-shadow: 0 0 15px rgba(14, 12, 12, 0.1);
   border-bottom-right-radius: 0.3rem;
   /* border: 1px solid rgba(255, 255, 255, 0.6); */
@@ -203,7 +206,7 @@ code {
 
 @media (max-width: 640px) {
   .chat-bubble {
-    max-width: 85%;
+    max-width: 100%;
   }
   
   /* Ensure proper behavior when mobile keyboard appears */

@@ -16,14 +16,18 @@ function App() {
       
       {/* Content container */}
       <div className="relative z-10 min-h-screen flex flex-col w-full overflow-hidden">
-        <header className="p-4 flex justify-center items-center flex-shrink-0">
+        <header className="p-6 flex justify-center items-center flex-shrink-0">
           <div className="text-center">
-            <img src="/img/logo.png" alt="Sierra Outfitters Logo" className="h-16 mx-auto mb-2" />
-            <h1 className="text-2xl font-bold text-white">Sierra Outfitters</h1>
+            <img 
+              src="/img/logo.png" 
+              alt="Sierra Outfitters Logo" 
+              className="h-24 mx-auto mb-3 logo-animation" 
+            />
+            <h1 className="text-3xl font-bold text-white drop-shadow-lg title-text">Sierra Outfitters</h1>
           </div>
         </header>
         <main className="flex-1 flex items-center justify-center p-4 min-h-0 overflow-hidden">
-          <div className="w-full max-w-3xl h-[800px] max-h-[calc(100vh-150px)] flex flex-col">
+          <div className="w-full max-w-3xl h-[800px] max-h-[calc(100vh-180px)] flex flex-col">
             <Chat />
           </div>
         </main>

@@ -5,11 +5,13 @@ import { MessageProps } from './Message';
 // Loading animation component
 const LoadingAnimation = () => (
   <div className="flex justify-start">
-    <div className="chat-bubble assistant">
-      <div className="flex space-x-2 items-center">
-        <div className="w-2 h-2 bg-gray-800 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-        <div className="w-2 h-2 bg-gray-800 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-        <div className="w-2 h-2 bg-gray-800 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+    <div className="pr-[15%]">
+      <div className="chat-bubble assistant">
+        <div className="flex space-x-2 items-center">
+          <div className="w-2 h-2 bg-gray-800 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+          <div className="w-2 h-2 bg-gray-800 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+          <div className="w-2 h-2 bg-gray-800 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+        </div>
       </div>
     </div>
   </div>
@@ -165,12 +167,18 @@ function Chat() {
               message.sender === 'user' ? 'justify-end' : 'justify-start'
             }`}
           >
-            <div
-              className={`chat-bubble ${
-                message.sender === 'user' ? 'user' : 'assistant'
+            <div 
+              className={`${
+                message.sender === 'user' ? 'pl-[15%]' : 'pr-[15%]'
               }`}
             >
-              <p className="whitespace-pre-wrap">{message.text}</p>
+              <div
+                className={`chat-bubble ${
+                  message.sender === 'user' ? 'user' : 'assistant'
+                }`}
+              >
+                <p className="whitespace-pre-wrap">{message.text}</p>
+              </div>
             </div>
           </div>
         ))}
