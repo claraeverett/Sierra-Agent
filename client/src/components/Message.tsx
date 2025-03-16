@@ -1,4 +1,11 @@
-import React from 'react';
+/**
+ * Message component to display a single message
+ * @param text - The text of the message
+ * @param sender - The sender of the message
+ * @param timestamp - The timestamp of the message
+ * @param intent - The intent of the message
+ * @param parameters - The parameters of the message
+ */
 
 export interface MessageProps {
   id: string;

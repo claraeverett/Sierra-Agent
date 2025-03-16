@@ -1,3 +1,11 @@
+/**
+ * Chat component to handle the conversation
+ * @param messages - The messages to display in the chat
+ * @param input - The input to send to the server
+ * @param isLoading - Whether the chat is loading
+ * @param isTyping - Whether the chat is typing
+ * @param sessionId - The sessionId to use for the chat
+ */
 import React, { useState, useEffect, useRef } from 'react';
 import apiService from '../services/api';
 import { MessageProps } from './Message';

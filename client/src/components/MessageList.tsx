@@ -1,3 +1,8 @@
+/**
+ * MessageList component to display a list of messages
+ * @param messages - The messages to display in the list
+ */
+
 import { useRef, useEffect } from 'react';
 import Message, { MessageProps } from './Message';
 

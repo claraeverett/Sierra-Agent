@@ -1,4 +1,8 @@
-import React from 'react';
+/**
+ * App component to handle the main application
+ * @returns The main application component
+ */
+
 import Chat from './components/Chat';
 
 function App() {

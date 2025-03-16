@@ -14,6 +14,7 @@ export async function generateResponse(
   promptTemplate: string | undefined, 
   details: Record<string, any>
 ): Promise<string | null> {
+  
   // Early return if no template provided
   if (!promptTemplate) return null;
   
@@ -39,7 +40,7 @@ export async function generateResponse(
     // Generate AI response
     const response = await modelResponse(
       conversationHistory, 
-      GENERATE_RESPONSE_PROMPT
+      GENERATE_RESPONSE_PROMPT(state.language)
     );
 
 

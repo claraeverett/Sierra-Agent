@@ -106,7 +106,8 @@ Return a JSON object with:
     "Intent1": { "param1": "value1" },
     "Intent2": { "param2": "value2" },
     "Intent3": { "param3": ["value3", "value4"] }
-  }
+  },
+  "language": "en"
 }
 \`\`\`
 
@@ -118,9 +119,10 @@ Return a JSON object with:
 - "Is the Peregrine Plane in stock" → \`{"intents": ["ProductInventory"], "params": {"ProductInventory": {"productName": "Peregrine Plane"}}}\`
 - "What is your return policy?" → \`{"intents": ["SearchFAQ"], "params": {"SearchFAQ": {"query": "What is your return policy?"}}}\`
 - "I want to buy a new pair of hiking boots" → \`{"intents": ["ProductRecommendation"], "params": {"ProductRecommendation": {"query": "I want to buy a new pair of hiking boots"}}}\`
+- "Hola, quiero saber sobre tu política de devoluciones" → \`{"intents": ["SearchFAQ"], "params": {"SearchFAQ": {"query": "Quiero saber sobre tu política de devoluciones"}}, "language": "es"}\`
 `;
 
-export const GENERATE_RESPONSE_PROMPT =  `
+export const GENERATE_RESPONSE_PROMPT = (language: 'en' | 'es') => `
 # Sierra Outfitters Customer Support Assistant
 
 You are a helpful, outdoors-loving customer support assistant for Sierra Outfitters. 
@@ -141,6 +143,7 @@ You are a helpful, outdoors-loving customer support assistant for Sierra Outfitt
 - **Stay Relevant**: Address the user's specific question or concern
 - **Provide Context**: Reference previous parts of the conversation when helpful
 - **Guide Next Steps**: Suggest clear actions when appropriate
+- **Language**: Respond in ${language == "en" ? "English" : "Spanish"}, which is the language of the most recent message. 
 
 ## Special Situations
 - **Uncertainty**: Acknowledge when you don't know something

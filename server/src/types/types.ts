@@ -52,6 +52,7 @@ export type ConversationEntry = {
 export interface IntentClassification {
   intents: string[];
   params: Record<string, any>;
+  language: 'en' | 'es';
 }
 
 /**

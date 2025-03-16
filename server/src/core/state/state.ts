@@ -14,6 +14,7 @@ export class State {
   public sessionId: string;
   public promoCode: PromoCode | null = null;
   public unresolvedIntents: Set<Intent> = new Set();
+  public language: 'en' | 'es' = 'en';
   
   // Private properties
   private customerInfo: CustomerInfo | null = null;
@@ -271,15 +272,6 @@ export class State {
    */
   clearConversationHistory() {
     this.conversation = [];
-  }
-
-  /**
-   * Gets the last N conversation entries
-   * @param n The number of entries to retrieve
-   * @returns Array of the last N conversation entries
-   */
-  getLastNConversations(n: number): ConversationEntry[] {
-    return this.conversation.slice(-n);
   }
 
   getHikingRecommendations(): HikingParams[] {

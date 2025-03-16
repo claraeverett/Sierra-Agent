@@ -29,15 +29,17 @@ export async function classifyIntent(message: string, state: State): Promise<Int
     // Ensure we have valid arrays and objects with fallbacks
     const intents = Array.isArray(result.intents) ? result.intents : [];
     const params = typeof result.params === 'object' ? result.params : {};
-
+    const language = typeof result.language === 'string' ? result.language : 'en';
+    state.language = language;
     // Return the classification, defaulting to 'General' intent if none detected
     return { 
       intents: intents.length ? intents : ['General'],
-      params
+      params,
+      language: language
     };
   } catch (error) {
     // Log parsing errors and return a default classification
     console.error('Error parsing intent classification:', error);
-    return { intents: ['General'], params: {} };
+    return { intents: ['General'], params: {}, language: 'en' };
   }
 } 
