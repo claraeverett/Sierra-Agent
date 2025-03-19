@@ -2,6 +2,24 @@
 
 An AI-powered customer service agent for Sierra Outfitters, an outdoor gear and apparel company. This agent can handle various customer inquiries, provide hiking recommendations, manage promotional codes, check order status, and more.
 
+## 🚀 Quick Start
+
+```bash
+# 1. Download and extract the project
+# 2. Navigate to the project directory
+cd sierra-agent
+
+# 3. Install all dependencies
+npm run install:all
+
+# 4. Create .env file in the server directory with your API keys
+
+# 5. Run the web application
+npm run dev
+```
+
+After running `npm run dev`, the web interface will be available at http://localhost:3000
+
 ## 🌟 Features
 
 - **Intent Classification**: Automatically identifies customer intents from natural language
@@ -14,19 +32,21 @@ An AI-powered customer service agent for Sierra Outfitters, an outdoor gear and 
 - **Unresolved Intent Tracking**: Follows up on previously mentioned but unresolved requests
 - **Product Recommendations**: Suggests products based on customer preferences and history
 - **Order Issue Resolution**: Helps customers resolve issues with their orders
+- **Multilingual Support**: Handles conversations in multiple languages including English and Spanish
 - **Web Interface**: Modern React-based UI with responsive design for all devices
 
 ## 🛠️ Technical Architecture
 
-The project is built with a modular architecture that separates concerns:
+The project is built with a modular architecture: 
 
 ### Core Components
 
 - **State Management**: Centralized state tracking for conversation history and customer data
-- **Intent Classification**: NLP-based intent detection using OpenAI's models
+- **Intent Classification**: NLP-based intent detection using OpenAI's 4o model
 - **Tool System**: Pluggable tools that handle specific customer intents
 - **Response Generation**: Context-aware response creation
 - **Agent System**: Coordinates tools and manages conversation flow
+- **Language Detection**: Automatically detects and responds in the user's language
 - **Web UI**: React-based user interface with TailwindCSS
 
 ### Directory Structure
@@ -68,26 +88,33 @@ The project is built with a modular architecture that separates concerns:
 
 - Node.js (v18 or higher)
 - npm or yarn
-- OpenAI API key
-- Mailgun API key (for email functionality)
-- Pinecone API key (for FAQ and product embeddings)
-- OpenWeather API key (for weather data in hiking recommendations)
+- API keys for the following services:
+  - OpenAI API key
+  - Mailgun API key (for email functionality)
+  - Pinecone API key (for FAQ and product embeddings)
+  - OpenWeather API key (for weather data in hiking recommendations)
 
-### Installation
+### Step-by-Step Installation
 
-1. Download the repository:
+1. **Download the repository:**
    ```bash
-   # Download and extract the zip file
+   # Download and extract the zip file to your preferred location
    
+   # Navigate to the project directory
    cd sierra-agent
    ```
 
-2. Install all dependencies (root, client, and server):
+2. **Install all dependencies:**
    ```bash
    npm run install:all
    ```
+   This installs dependencies for:
+   - Root project
+   - Client (React frontend)
+   - Server (Node.js backend)
 
-3. Create a `.env` file in the server directory with your API keys:
+3. **Set up environment variables:**
+   Create a `.env` file in the `server` directory with the following content:
    ```
    OPENAI_API_KEY=your_openai_api_key        # Required for AI functionality
    MAILGUN_API_KEY=your_mailgun_api_key      # Required for email notifications
@@ -97,56 +124,40 @@ The project is built with a modular architecture that separates concerns:
    PORT=3001                                 # Server port (optional)
    ```
 
+   > **Note:** The application requires these API keys to function properly. If you're missing any keys, certain features may not work.
+
+4. **Run the application:**
+   ```bash
+   npm run dev
+   ```
+   This single command:
+   - Starts the backend server at http://localhost:3001
+   - Launches the frontend client at http://localhost:3000
+   - Enables all AI chat functionality
+
+### Troubleshooting Installation
+
+If you encounter issues:
+
+- **Error: Module not found**: Run `npm run install:all` again to ensure all dependencies are installed
+- **API Errors**: Verify your API keys in the `.env` file
+- **Port conflicts**: If port 3000 or 3001 is already in use, modify the PORT in `.env` and update `REACT_APP_API_URL` in client/.env
+
 ### Running the Application
 
-#### Command Line Interface (CLI)
+#### Primary Method: Web Interface
 
-To run the agent in CLI mode for testing:
-
-```bash
-npm run start:cli
-```
-
-This will start the agent in interactive mode, allowing you to chat with it directly in your terminal. Type `exit` to quit the session.
-
-#### Web Interface
-
-To run the complete application (both server and client):
+**To run the complete web application:**
 
 ```bash
 npm run dev
 ```
 
-This will start both the server and client in development mode. The client will be available at http://localhost:3000 and the server at http://localhost:3001.
+This is the **main command** you should use to run Sierra Outfitters AI Agent. After running this command:
+- The web interface will be available at http://localhost:3000
+- The backend API will be running at http://localhost:3001
 
-To run the server and client separately:
-
-1. Start the server:
-   ```bash
-   npm run dev:server
-   ```
-
-2. Start the client:
-   ```bash
-   npm run dev:client
-   ```
-
-### Building for Production
-
-To build both client and server for production:
-
-```bash
-npm run build
-```
-
-To run the production build:
-
-```bash
-# First build the project
-npm run build
-# Then start the server
-npm run start:server
-```
+> **Important:** All project features require both the frontend and backend to be running, which this command handles for you.
 
 ## 💻 Usage
 
@@ -160,16 +171,18 @@ Example interactions:
 - "I need help with my recent purchase"
 - "Can you recommend products for hiking in cold weather?"
 - "I have an issue with my order W001"
+- "¿Me puedes recomendar rutas de senderismo cerca de Madrid?" (Spanish: Can you recommend hiking trails near Madrid?)
+- "Estado de mi pedido W002" (Spanish: Status of my order W002)
 
 ## 🧩 Key Components
 
 ### Intent Classification
 
-The agent uses a sophisticated intent classification system to understand customer requests. It can identify multiple intents in a single message and extract relevant parameters.
+The agent uses a sophisticated intent classification system to understand customer requests. It can identify multiple intents in a single message and extract relevant parameters. The system also detects the language of the user's message and responds accordingly.
 
 ### State Management
 
-The `State` class maintains conversation context, customer preferences, order information, and tracks unresolved intents. This allows the agent to provide personalized responses and follow up on previous requests.
+The `State` class maintains conversation context, customer preferences, order information, and tracks unresolved intents. This allows the agent to provide personalized responses and follow up on previous requests. The state also tracks the user's preferred language to ensure consistent communication.
 
 ### Tool System
 
@@ -184,6 +197,28 @@ Each customer intent is handled by a specialized tool:
 - `productRecommendationTool`: Provides product recommendations
 - `resolveOrderIssueTool`: Helps resolve issues with orders
 - `generalTool`: Handles general inquiries and fallbacks
+
+### Multilingual Support
+
+The Sierra Agent is designed with multilingual capabilities to serve both English and Spanish speakers:
+
+- **Language Detection**: The agent automatically detects the language of the user's message during intent classification.
+  
+- **Dynamic Language Adaptation**: The agent responds in the language of the most recent message, allowing for seamless language transitions during a conversation without requiring any special commands or settings.
+  
+- **Natural Code-Switching**: Users can freely switch between languages mid-conversation (e.g., from English to Spanish and back) and the agent will adapt immediately to match the language of each new message.
+  
+Example of language transition:
+```
+User: "What hiking trails do you recommend near Denver?"
+Agent: "I'd recommend the following trails near Denver: Bear Peak, Royal Arch Trail..."
+
+User: "¿Y qué tal cerca de Boulder?"
+Agent: "En Boulder, te recomendaría estos senderos: Flatirons Vista, Mesa Trail..."
+
+User: "Thanks! What equipment should I bring?"
+Agent: "You'll want to bring hiking boots, water, sunscreen..."
+```
 
 ### Web Interface
 
@@ -217,42 +252,3 @@ The project is organized as a monorepo with separate client and server packages:
 ### Modifying Prompts
 
 System prompts are stored in `server/src/prompts/system-prompts.ts` and can be modified to adjust the agent's behavior and responses. Specialized prompts for specific tools are in their respective files in the `prompts` directory.
-
-### Available Scripts
-
-#### Root Scripts
-- `install:all`: Install dependencies for root, client, and server
-- `start:cli`: Run the CLI interface
-- `start:server`: Run the web server
-- `start:client`: Run the client
-- `dev:cli`: Run the CLI interface in development mode
-- `dev:server`: Run the server in development mode
-- `dev:client`: Run the client in development mode
-- `dev`: Run both server and client in development mode
-- `build:server`: Build the server for production
-- `build:client`: Build the client for production
-- `build`: Build both server and client for production
-- `test`: Run tests
-
-#### Server Scripts
-- `start`: Run the CLI interface
-- `start:server`: Run the web server
-- `dev`: Run the CLI interface in development mode
-- `dev:server`: Run the web server in development mode
-- `build`: Build the server for production
-- `build:ui`: Build the client from the server directory
-- `build:all`: Build both server and client
-- `setup`: Run setup script
-- `start:ui`: Start the client from the server directory
-- `dev:ui`: Start the client in development mode from the server directory
-- `dev:full`: Run both server and client in development mode
-- `test`: Run tests
-- `lint`: Run ESLint
-- `format`: Format code with Prettier
-
-#### Client Scripts
-- `start`: Run the client in development mode
-- `build`: Build the client for production
-- `test`: Run client tests
-- `eject`: Eject from Create React App
-- `build:css`: Build CSS with Tailwind
